@@ -33,8 +33,8 @@
   - `xml.java.home` or `java.home` in `coc-settings.json`
   - Environment variable `JAVA_HOME` or `JDK_HOME`
   - **Note**: The path should end at the parent folder that contains the `bin` folder.
-    **Example Path**: `/usr/lib/jvm/java-1.8.0` if `bin` exists at `/usr/lib/jvm/java-1.8.0/bin`.
-    **macOS**: `export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"`
+  - **Example Path**: `/usr/lib/jvm/java-1.8.0` if `bin` exists at `/usr/lib/jvm/java-1.8.0/bin`.
+  - **macOS**: `export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"`
 
 ## Supported settings
 
