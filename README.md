@@ -2,6 +2,10 @@
 
 > fork of [vscode-xml](https://github.com/redhat-developer/vscode-xml), provides support for creating and editing XML documents, based on the [LSP4XML Language Server](https://github.com/angelozerr/lsp4xml), running with Java.
 
+## Install
+
+`:CocInstall coc-xml`
+
 ## Features
 
 - Syntax error reporting
