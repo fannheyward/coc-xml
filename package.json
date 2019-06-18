@@ -1,0 +1,224 @@
+{
+  "name": "coc-xml",
+  "version": "1.0.0",
+  "description": "coc XML",
+  "main": "lib/index.js",
+  "author": "Heyward Fann <fannheyward@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npx npm-run-all clean build"
+  },
+  "engines": {
+    "coc": "^0.0.70"
+  },
+  "keywords": [
+    "coc.nvim",
+    "xml"
+  ],
+  "dependencies": {
+    "got": "^9.6.0",
+    "path-exists": "^4.0.0",
+    "tunnel": "^0.0.6"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/got": "^9.6.0",
+    "@types/node": "^12.0.8",
+    "@types/tunnel": "^0.0.1",
+    "coc.nvim": "^0.0.71",
+    "rimraf": "^2.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fannheyward/coc-xml"
+  },
+  "prettier": {
+    "printWidth": 160,
+    "singleQuote": true
+  },
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "XML configuration",
+      "properties": {
+        "xml.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the XML language server.",
+          "scope": "window"
+        },
+        "xml.catalogs": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of XML Catalogs",
+          "scope": "window"
+        },
+        "xml.logs.client": {
+          "type": "boolean",
+          "default": true,
+          "description": "Should the server log to client output"
+        },
+        "xml.format.splitAttributes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Split multiple attributes each onto a new line",
+          "scope": "window"
+        },
+        "xml.format.joinCDATALines": {
+          "type": "boolean",
+          "default": false,
+          "description": "Join lines in a CDATA tag's content",
+          "scope": "window"
+        },
+        "xml.format.joinCommentLines": {
+          "type": "boolean",
+          "default": false,
+          "description": "Join comment content on format",
+          "scope": "window"
+        },
+        "xml.format.spaceBeforeEmptyCloseTag": {
+          "type": "boolean",
+          "default": true,
+          "description": "Insert space before end of self closing tag. \nExample:\n  <tag/> -> <tag />",
+          "scope": "window"
+        },
+        "xml.format.joinContentLines": {
+          "type": "boolean",
+          "default": false,
+          "description": "Normalize the whitespace of content inside an element. Newlines and excess whitespace are removed.",
+          "scope": "window"
+        },
+        "xml.format.preserveEmptyContent": {
+          "type": "boolean",
+          "default": false,
+          "description": "Preserve empty content/whitespace in a tag.",
+          "scope": "window"
+        },
+        "xml.format.preservedNewlines": {
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "default": 2,
+          "description": "Preserve new lines that separate tags. The value represents the maximum number of new lines per section. A value of 0 removes all new lines.",
+          "scope": "window"
+        },
+        "xml.format.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable ability to format document",
+          "scope": "window"
+        },
+        "xml.format.quotations": {
+          "type": "string",
+          "enum": [
+            "doubleQuotes",
+            "singleQuotes"
+          ],
+          "default": "doubleQuotes",
+          "description": "Which type of quotes to use for attribute values when formatting.",
+          "scope": "window"
+        },
+        "xml.fileAssociations": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "systemId": {
+                "type": "string",
+                "description": "The path or URL to the XML schema (XSD or DTD)"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "File glob pattern. Example: **/*.Format.ps1xml\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob",
+                "markdownDescription": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              }
+            },
+            "required": [
+              "systemId",
+              "pattern"
+            ]
+          },
+          "description": "Allows XML schemas to be associated to file name patterns.\n\nExample:\n[{\n  \"systemId\": \"path/to/file.xsd\",\n  \"pattern\": \"file1.xml\"\n},\n{\n  \"systemId\": \"http://www.w3.org/2001/XMLSchema.xsd\",\n  \"pattern\": \"**/*.xsd\"\n}]",
+          "markdownDescription": "Allows XML schemas to be associated to file name patterns.\n\nExample:\n```json\n[{\n  \"systemId\": \"path/to/file.xsd\",\n  \"pattern\": \"file1.xml\"\n},\n{\n  \"systemId\": \"http://www.w3.org/2001/XMLSchema.xsd\",\n  \"pattern\": \"**/*.xsd\"\n}]\n```",
+          "scope": "window"
+        },
+        "xml.completion.autoCloseTags": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable autoclosing of XML tags. \n\nIMPORTANT: Turn off editor.autoClosingTags for this to work",
+          "scope": "window"
+        },
+        "xml.java.home": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Specifies the folder path to the JDK (8 or more recent) used to launch the XML Language Server.\nOn Windows, backslashes must be escaped, i.e.\n\"xml.java.home\": \"C:\\\\Program Files\\\\Java\\\\jdk1.8.0_161\"",
+          "scope": "window"
+        },
+        "xml.server.vmargs": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "-noverify -Xmx64M -XX:+UseG1GC -XX:+UseStringDeduplication",
+          "description": "Specifies extra VM arguments used to launch the XML Language Server. Eg. use `-noverify -Xmx1G  -XX:+UseG1GC -XX:+UseStringDeduplication` to bypass class verification, increase the heap size to 1GB and enable String deduplication with the G1 Garbage collector",
+          "scope": "window"
+        },
+        "xml.server.workDir": {
+          "type": "string",
+          "default": "~/.lsp4xml",
+          "description": "Set a custom folder path for cached XML Schemas. An absolute path is expected, although the ~ prefix (for the user home directory) is supported.",
+          "scope": "window"
+        },
+        "xml.validation.noGrammar": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "hint",
+            "info",
+            "warning",
+            "error"
+          ],
+          "default": "hint",
+          "description": "The message severity when a document has no associated grammar.",
+          "scope": "window"
+        },
+        "xml.validation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable all validation.",
+          "scope": "window"
+        },
+        "xml.validation.schema": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable schema based validation. Ignored if \"xml.validation.enabled\": false.",
+          "scope": "window"
+        },
+        "xml.symbols.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable document symbols (Outline). No symbols are given if `\"xml.symbol.enabled\": false`.",
+          "scope": "window"
+        }
+      }
+    }
+  }
+}

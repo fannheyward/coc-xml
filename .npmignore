@@ -1,0 +1,7 @@
+src
+test
+node_modules
+tsconfig.json
+*.jar
+*.map
+.tags
