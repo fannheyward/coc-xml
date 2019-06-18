@@ -2,6 +2,7 @@ src
 test
 node_modules
 tsconfig.json
+yarn-error.log
 *.jar
 *.map
 .tags
