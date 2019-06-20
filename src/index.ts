@@ -38,7 +38,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     },
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     initializationOptions: {
-      settings: workspace.getConfiguration('xml')
+      settings: { xml: workspace.getConfiguration('xml') }
     }
   };
 
