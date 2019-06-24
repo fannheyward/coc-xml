@@ -9,6 +9,11 @@
   dependencies:
     msgpack-lite "^0.1.26"
 
+"@rgrove/parse-xml@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-2.0.1.tgz#e724213600b4fdc533ded027c1314a9f843a5146"
+  integrity sha512-no7j8h1KGbSL00iGqHLIPE2Z7MxOAEACgApA+9zPv3NTast9+0IrnDo+ZFEp9pq5k4e1YcffF/4haJJhS8ebXw==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"

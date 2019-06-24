@@ -45,6 +45,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   let client = new LanguageClient('xml', 'XML LSP', serverOptions, clientOptions);
   context.subscriptions.push(services.registLanguageClient(client));
 
+  context.subscriptions.push(
+    commands.registerCommand(Commands.DOWNLOAD_SERVER, async () => {
+      await downloadServer();
+    })
+  );
+
   client.onReady().then(() => {
     workspace.showMessage('XML Language Server Started');
   });
