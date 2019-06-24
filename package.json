@@ -220,6 +220,13 @@
           "scope": "window"
         }
       }
-    }
+    },
+    "commands": [
+      {
+        "command": "xml.updateLanguageServer",
+        "title": "Download latest version of lsp4xml from bintray.com",
+        "category": "XML"
+      }
+    ]
   }
 }

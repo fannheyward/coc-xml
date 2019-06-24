@@ -68,6 +68,10 @@ The following settings are supported:
 
 More detailed info in the [vscode-xml Wiki](https://github.com/redhat-developer/vscode-xml/wiki/Preferences).
 
+## Available commands
+
+- `xml.updateLanguageServer`: download latest version of lsp4xml from bintray.com
+
 ## License
 
 MIT
