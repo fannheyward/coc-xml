@@ -3,6 +3,8 @@ test
 node_modules
 tsconfig.json
 yarn-error.log
+yarn.lock
+webpack.config.js
 *.jar
 *.map
 .tags
