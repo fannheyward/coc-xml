@@ -30,14 +30,18 @@ export async function downloadServer(): Promise<string> {
   let proxy = config.get<string>('proxy', '');
   let options: any = { encoding: null };
   if (proxy) {
-    let parts = proxy.split(':', 2);
-    options.agent = tunnel.httpsOverHttp({
-      proxy: {
-        headers: {},
-        host: parts[0],
-        port: Number(parts[1])
-      }
-    });
+    let auth = proxy.includes('@') ? proxy.split('@', 2)[0] : '';
+    let parts = auth.length ? proxy.slice(auth.length + 1).split(':') : proxy.split(':');
+    if (parts.length > 1) {
+      options.agent = tunnel.httpsOverHttp({
+        proxy: {
+          headers: {},
+          host: parts[0],
+          port: parseInt(parts[1], 10),
+          proxyAuth: auth
+        }
+      });
+    }
   }
 
   const _version = await getLatestVersion();
