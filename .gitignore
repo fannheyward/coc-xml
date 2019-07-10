@@ -2,3 +2,5 @@ lib
 node_modules/
 yarn-error.log
 *.jar
+server/*
+!server/.gitkeep

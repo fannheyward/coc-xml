@@ -4,11 +4,13 @@ import { Commands } from './commands';
 import { RequirementsData, resolveRequirements } from './requirements';
 import { prepareExecutable } from './javaServerStarter';
 import { downloadServer } from './downloader';
+import { existsSync } from 'fs';
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  const serverRoot = context.asAbsolutePath('server');
   let requirements: RequirementsData;
   try {
-    requirements = await resolveRequirements();
+    requirements = await resolveRequirements(serverRoot);
   } catch (e) {
     let res = await workspace.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
     if (res == 0) {
@@ -19,10 +21,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     return;
   }
 
-  if (requirements.serverPath.length === 0) {
+  if (requirements.serverPath.length === 0 || !existsSync(requirements.serverPath)) {
     workspace.showMessage(`lsp4xml.jar not found, downloading...`);
     try {
-      requirements.serverPath = await downloadServer();
+      requirements.serverPath = await downloadServer(serverRoot);
     } catch (e) {
       workspace.showMessage('Download lsp4xml.jar failed, you can download it from https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/');
       return;
@@ -47,7 +49,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   context.subscriptions.push(
     commands.registerCommand(Commands.DOWNLOAD_SERVER, async () => {
-      await downloadServer();
+      await downloadServer(serverRoot)
+        .then(() => {
+          workspace.showMessage(`Update lsp4xml success`);
+        })
+        .catch(() => {
+          workspace.showMessage(`Update lsp4xml failed`);
+        });
     })
   );
 

@@ -1,4 +1,5 @@
 import got from 'got';
+import path from 'path';
 import tunnel from 'tunnel';
 import { createWriteStream } from 'fs';
 import { workspace } from 'coc.nvim';
@@ -22,7 +23,7 @@ async function getLatestVersion(): Promise<string> {
   return ver;
 }
 
-export async function downloadServer(): Promise<string> {
+export async function downloadServer(root: string): Promise<string> {
   let statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Downloading lsp4xml from bintray.com';
   statusItem.show();
@@ -47,7 +48,7 @@ export async function downloadServer(): Promise<string> {
   const _version = await getLatestVersion();
   const _file = `org.eclipse.lsp4xml-${_version}-uber.jar`;
   const _url = `https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/${_version}/${_file}`;
-  const _path = __dirname + '/' + _file;
+  const _path = path.join(root, _file);
   return new Promise<string>((resolve, reject) => {
     try {
       got

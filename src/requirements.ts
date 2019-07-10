@@ -28,12 +28,12 @@ export interface ErrorData {
  * if any of the requirements fails to resolve.
  *
  */
-export async function resolveRequirements(): Promise<RequirementsData> {
+export async function resolveRequirements(root: string): Promise<RequirementsData> {
   const xmlConfig = workspace.getConfiguration('xml');
 
   let javaHome = await checkJavaRuntime();
   let javaVersion = await checkJavaVersion(javaHome);
-  let serverPath = await checkServerPath();
+  let serverPath = await checkServerPath(root);
   let vmargs = xmlConfig.get<string>('server.vmargs', '');
   return Promise.resolve({ javaHome, javaVersion, serverPath, vmargs });
 }
@@ -91,12 +91,12 @@ function checkJavaVersion(java_home: string): Promise<number> {
   });
 }
 
-function checkServerPath(): Promise<string> {
+function checkServerPath(root: string): Promise<string> {
   return new Promise(resolve => {
     let serverPath = '';
-    const launchersFound: string[] = glob.sync('org.eclipse.lsp4xml-*-uber.jar', { cwd: __dirname });
+    const launchersFound: string[] = glob.sync('org.eclipse.lsp4xml-*-uber.jar', { cwd: root });
     if (launchersFound.length > 0) {
-      serverPath = path.resolve(__dirname, launchersFound[0]);
+      serverPath = path.join(root, launchersFound[0]);
     }
 
     resolve(serverPath);
