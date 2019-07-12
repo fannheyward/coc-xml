@@ -1,16 +1,14 @@
-import { services, commands, ExtensionContext, workspace, LanguageClientOptions, RevealOutputChannelOn, LanguageClient } from 'coc.nvim';
-
+import { commands, ExtensionContext, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, workspace } from 'coc.nvim';
 import fs from 'fs';
-import mkdirp from 'mkdirp';
 import { Commands } from './commands';
-import { RequirementsData, resolveRequirements } from './requirements';
-import { prepareExecutable } from './javaServerStarter';
 import { downloadServer } from './downloader';
+import { prepareExecutable } from './javaServerStarter';
+import { RequirementsData, resolveRequirements } from './requirements';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverRoot = context.storagePath;
   if (!fs.existsSync(serverRoot)) {
-    mkdirp.sync(serverRoot);
+    fs.mkdirSync(serverRoot);
   }
 
   let requirements: RequirementsData;
