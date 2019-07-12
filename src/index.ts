@@ -1,13 +1,18 @@
 import { services, commands, ExtensionContext, workspace, LanguageClientOptions, RevealOutputChannelOn, LanguageClient } from 'coc.nvim';
 
+import fs from 'fs';
+import mkdirp from 'mkdirp';
 import { Commands } from './commands';
 import { RequirementsData, resolveRequirements } from './requirements';
 import { prepareExecutable } from './javaServerStarter';
 import { downloadServer } from './downloader';
-import { existsSync } from 'fs';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  const serverRoot = context.asAbsolutePath('server');
+  const serverRoot = context.storagePath;
+  if (!fs.existsSync(serverRoot)) {
+    mkdirp.sync(serverRoot);
+  }
+
   let requirements: RequirementsData;
   try {
     requirements = await resolveRequirements(serverRoot);
@@ -21,7 +26,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     return;
   }
 
-  if (requirements.serverPath.length === 0 || !existsSync(requirements.serverPath)) {
+  if (requirements.serverPath.length === 0 || !fs.existsSync(requirements.serverPath)) {
     workspace.showMessage(`lsp4xml.jar not found, downloading...`);
     try {
       requirements.serverPath = await downloadServer(serverRoot);

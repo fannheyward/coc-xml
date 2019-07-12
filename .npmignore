@@ -5,8 +5,6 @@ tsconfig.json
 yarn-error.log
 yarn.lock
 webpack.config.js
-server/*
-!server/.gitkeep
 *.jar
 *.map
 .tags
