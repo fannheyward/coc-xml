@@ -3,6 +3,7 @@ import cp from 'child_process';
 import path, { join } from 'path';
 import glob from 'glob';
 import pathExists from 'path-exists';
+import semver from 'semver';
 
 const isWindows = process.platform.indexOf('win') === 0;
 const JAVAC_FILENAME = 'javac' + (isWindows ? '.exe' : '');
@@ -96,6 +97,14 @@ function checkServerPath(root: string): Promise<string> {
     let serverPath = '';
     const launchersFound: string[] = glob.sync('org.eclipse.lsp4xml-*-uber.jar', { cwd: root });
     if (launchersFound.length > 0) {
+      try {
+        launchersFound.sort((a, b) => {
+          const v1 = a.split('-')[1];
+          const v2 = b.split('-')[1];
+
+          return semver.lte(v1, v2) ? 1 : -1;
+        });
+      } catch (_e) {}
       serverPath = path.join(root, launchersFound[0]);
     }
 
