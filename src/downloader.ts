@@ -10,14 +10,13 @@ async function getLatestVersion(): Promise<string> {
   let ver = '0.7.0';
   const _url = 'https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/maven-metadata.xml';
   try {
-    got(_url).then(resp => {
-      const doc = parseXml(resp.body);
-      for (const ele of doc.children[0].children) {
-        if (ele.type === 'element' && ele.name && ele.name === 'version') {
-          ver = ele.children[0].text;
-        }
+    const resp = await got(_url);
+    const doc = parseXml(resp.body);
+    for (const ele of doc.children[0].children) {
+      if (ele.type === 'element' && ele.name && ele.name === 'version') {
+        ver = ele.children[0].text;
       }
-    });
+    }
   } catch (_e) {}
 
   return ver;
