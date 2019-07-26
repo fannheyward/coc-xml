@@ -72,6 +72,15 @@ More detailed info in the [vscode-xml Wiki](https://github.com/redhat-developer/
 
 - `xml.updateLanguageServer`: download latest version of lsp4xml from bintray.com
 
+## Screenshots
+
+### Schema validation
+
+<img width="738" alt="Screen Shot 2019-07-26 at 23 24 20" src="https://user-images.githubusercontent.com/345274/61962923-3e667700-affd-11e9-8cdb-3103c39987e4.png">
+
+### Snippet & Doc
+<img width="594" alt="Screen Shot 2019-07-26 at 23 26 04" src="https://user-images.githubusercontent.com/345274/61962925-3e667700-affd-11e9-8831-ecf78ef2bfbf.png">
+
 ## License
 
 MIT
