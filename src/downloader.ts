@@ -1,16 +1,17 @@
-import got from 'got';
-import path from 'path';
-import tunnel from 'tunnel';
-import { createWriteStream } from 'fs';
-import { workspace } from 'coc.nvim';
 //@ts-ignore
 import parseXml from '@rgrove/parse-xml';
+import { workspace } from 'coc.nvim';
+import { createWriteStream } from 'fs';
+import got from 'got';
+import { Agent } from 'http';
+import path from 'path';
+import tunnel from 'tunnel';
 
-async function getLatestVersion(): Promise<string> {
+async function getLatestVersion(agent: Agent): Promise<string> {
   let ver = '0.7.0';
   const _url = 'https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/maven-metadata.xml';
   try {
-    const resp = await got(_url);
+    const resp = await got(_url, { agent: agent });
     const doc = parseXml(resp.body);
     for (const ele of doc.children[0].children) {
       if (ele.type === 'element' && ele.name && ele.name === 'version') {
@@ -44,7 +45,7 @@ export async function downloadServer(root: string): Promise<string> {
     }
   }
 
-  const _version = await getLatestVersion();
+  const _version = await getLatestVersion(options.agent);
   const _file = `org.eclipse.lsp4xml-${_version}-uber.jar`;
   const _url = `https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/${_version}/${_file}`;
   const _path = path.join(root, _file);
