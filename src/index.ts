@@ -1,9 +1,11 @@
 import { commands, ExtensionContext, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, workspace } from 'coc.nvim';
 import fs from 'fs';
+import { DidChangeConfigurationNotification, ReferencesRequest, TextDocumentIdentifier, TextDocumentPositionParams } from 'vscode-languageserver-protocol';
 import { Commands } from './commands';
 import { downloadServer } from './downloader';
 import { prepareExecutable } from './javaServerStarter';
 import { RequirementsData, resolveRequirements } from './requirements';
+import { onConfigurationChange, subscribeJDKChangeConfiguration } from './settings';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverRoot = context.storagePath;
@@ -35,15 +37,39 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.showMessage(`lsp4xml.jar downloaded`);
   }
 
-  let serverOptions = prepareExecutable(requirements);
-  let clientOptions: LanguageClientOptions = {
-    documentSelector: ['xml'],
+  const outputChannel = workspace.createOutputChannel('XML Language Server');
+  const serverOptions = prepareExecutable(requirements);
+  const clientOptions: LanguageClientOptions = {
+    documentSelector: [
+      { scheme: 'file', language: 'xml' },
+      { scheme: 'file', language: 'xsl' },
+      { scheme: 'untitled', language: 'xml' },
+      { scheme: 'untitled', language: 'xsl' }
+    ],
     synchronize: {
       configurationSection: 'xml'
     },
+    outputChannel,
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     initializationOptions: {
-      settings: { xml: workspace.getConfiguration('xml') }
+      settings: {
+        xml: workspace.getConfiguration('xml'),
+        extendedClientCapabilities: {
+          codeLens: {
+            codeLensKind: {
+              valueSet: ['references']
+            }
+          }
+        }
+      }
+    },
+    middleware: {
+      workspace: {
+        didChangeConfiguration: () => {
+          client.sendNotification(DidChangeConfigurationNotification.type.method, { settings: workspace.getConfiguration('xml') });
+          onConfigurationChange();
+        }
+      }
     }
   };
 
@@ -51,6 +77,20 @@ export async function activate(context: ExtensionContext): Promise<void> {
   context.subscriptions.push(services.registLanguageClient(client));
 
   context.subscriptions.push(
+    subscribeJDKChangeConfiguration(),
+
+    commands.registerCommand(Commands.SHOW_REFERENCES, async () => {
+      const { document, position } = await workspace.getCurrentState();
+
+      const param: TextDocumentPositionParams = {
+        textDocument: <TextDocumentIdentifier>{ uri: document.uri },
+        position
+      };
+      client.sendRequest(ReferencesRequest.type.method, param).then(locations => {
+        commands.executeCommand(Commands.EDITOR_SHOW_REFERENCES, document.uri, position, locations);
+      });
+    }),
+
     commands.registerCommand(Commands.DOWNLOAD_SERVER, async () => {
       await downloadServer(serverRoot)
         .then(() => {

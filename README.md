@@ -45,8 +45,9 @@
 The following settings are supported:
 
 - `xml.java.home`: Set the Java path required to run the XML Language Server. If not set, falls back to either the `java.home` preference or the `JAVA_HOME` or `JDK_HOME` environment variables.
-- `xml.trace.server` : Trace the communication between coc and the XML Language Server in the Output view.
-- `xml.catalogs` : Register XML catalog files.
+- `xml.trace.server`: Trace the communication between coc and the XML Language Server in the Output view.
+- `xml.catalogs`: Register XML catalog files.
+- `xml.codeLens.enabled`: Enable/disable XML CodeLens. Defaults to `true`.
 - `xml.logs.client` : Enable/disable logging to the Output view.
 - `xml.fileAssociations` : Associate XML Schemas to XML file patterns.
 - `xml.format.splitAttributes` : Set to `true` to split node attributes onto multiple lines during formatting. Defaults to `false`.
@@ -64,13 +65,15 @@ The following settings are supported:
 - `xml.validation.schema`: Set to `false` to disable schema validation. Defaults to `true`.
 - `xml.validation.noGrammar`: The message severity when a document has no associated grammar. Defaults to `hint`.
 - `xml.server.workDir`: Set an absolute path for all cached schemas to be stored. Defaults to `~/.lsp4xml`.
-- `xml.symbols.enabled`: Enable/disable document symbols (Outline). Default is `true`.
+- `xml.symbols.enabled`: Enable/disable document symbols (Outline). Default to `true`.
+- `xml.symbols.excluded`: Disable document symbols (Outline) for the given file name patterns. Defaults to `[]`.
 
 More detailed info in the [vscode-xml Wiki](https://github.com/redhat-developer/vscode-xml/wiki/Preferences).
 
 ## Available commands
 
 - `xml.updateLanguageServer`: download latest version of lsp4xml from bintray.com
+- `xml.show.references`: Show XML references
 
 ## Screenshots
 
@@ -79,6 +82,7 @@ More detailed info in the [vscode-xml Wiki](https://github.com/redhat-developer/
 <img width="738" alt="Screen Shot 2019-07-26 at 23 24 20" src="https://user-images.githubusercontent.com/345274/61962923-3e667700-affd-11e9-8cdb-3103c39987e4.png">
 
 ### Snippet & Doc
+
 <img width="594" alt="Screen Shot 2019-07-26 at 23 26 04" src="https://user-images.githubusercontent.com/345274/61962925-3e667700-affd-11e9-8831-ecf78ef2bfbf.png">
 
 ## License
