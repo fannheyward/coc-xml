@@ -6,13 +6,16 @@ import { RequirementsData } from './requirements';
 declare var v8debug: string;
 const DEBUG = typeof v8debug === 'object' || startedInDebugMode();
 
+const isWindows = process.platform.indexOf('win') === 0;
+const JAVA_FILENAME = 'java' + (isWindows ? '.exe' : '');
+
 export function prepareExecutable(requirements: RequirementsData): Executable {
   let executable: Executable = Object.create(null);
   let options = Object.create(null);
   options.env = process.env;
   options.stdio = 'pipe';
   executable.options = options;
-  executable.command = path.resolve(requirements.javaHome + '/bin/java');
+  executable.command = path.resolve(requirements.javaHome, 'bin', JAVA_FILENAME);
   executable.args = prepareParams(requirements);
   return executable;
 }

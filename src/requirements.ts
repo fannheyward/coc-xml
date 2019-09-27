@@ -6,7 +6,7 @@ import pathExists from 'path-exists';
 import semver from 'semver';
 
 const isWindows = process.platform.indexOf('win') === 0;
-const JAVAC_FILENAME = 'javac' + (isWindows ? '.exe' : '');
+const JAVA_FILENAME = 'java' + (isWindows ? '.exe' : '');
 
 export interface RequirementsData {
   javaHome: string;
@@ -69,7 +69,7 @@ function checkJavaRuntime(): Promise<string> {
       if (!pathExists.sync(javaHome)) {
         openJDKDownload(reject, source + ' points to a missing folder');
       }
-      if (!pathExists.sync(path.resolve(javaHome, 'bin', JAVAC_FILENAME))) {
+      if (!pathExists.sync(path.resolve(javaHome, 'bin', JAVA_FILENAME))) {
         openJDKDownload(reject, source + ' does not point to a JDK.');
       }
       return resolve(javaHome);
@@ -81,7 +81,7 @@ function checkJavaRuntime(): Promise<string> {
 
 function checkJavaVersion(java_home: string): Promise<number> {
   return new Promise((resolve, reject) => {
-    cp.execFile(java_home + '/bin/java', ['-version'], {}, (_error, _stdout, stderr) => {
+    cp.execFile(java_home + '/bin/' + JAVA_FILENAME, ['-version'], {}, (_error, _stdout, stderr) => {
       let javaVersion = parseMajorVersion(stderr);
       if (javaVersion < 8) {
         openJDKDownload(reject, 'Java 8 or more recent is required to run. Please download and install a recent JDK');
