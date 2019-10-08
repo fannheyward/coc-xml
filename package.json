@@ -73,7 +73,7 @@
         },
         "xml.logs.client": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Should the server log to client output"
         },
         "xml.format.splitAttributes": {
