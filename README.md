@@ -2,6 +2,8 @@
 
 > fork of [vscode-xml](https://github.com/redhat-developer/vscode-xml), provides support for creating and editing XML documents, based on the [LSP4XML Language Server](https://github.com/angelozerr/lsp4xml), running with Java.
 
+<img width="594" alt="Screen Shot 2019-07-26 at 23 26 04" src="https://user-images.githubusercontent.com/345274/61962925-3e667700-affd-11e9-8831-ecf78ef2bfbf.png">
+
 ## Install
 
 `:CocInstall coc-xml`
@@ -64,6 +66,8 @@ The following settings are supported:
 - `xml.validation.enabled`: Set to `false` to disable all validation. Defaults to `true`.
 - `xml.validation.schema`: Set to `false` to disable schema validation. Defaults to `true`.
 - `xml.validation.noGrammar`: The message severity when a document has no associated grammar. Defaults to `hint`.
+- `xml.validation.disallowDocTypeDecl`: Enable/disable if a fatal error is thrown if the incoming document contains a DOCTYPE declaration. Default is `false`.
+- `xml.validation.resolveExternalEntities`: Enable/disable resolve of external entities. Default is `false`.
 - `xml.server.workDir`: Set an absolute path for all cached schemas to be stored. Defaults to `~/.lsp4xml`.
 - `xml.symbols.enabled`: Enable/disable document symbols (Outline). Default to `true`.
 - `xml.symbols.excluded`: Disable document symbols (Outline) for the given file name patterns. Defaults to `[]`.
@@ -74,16 +78,6 @@ More detailed info in the [vscode-xml Wiki](https://github.com/redhat-developer/
 
 - `xml.updateLanguageServer`: download latest version of lsp4xml from bintray.com
 - `xml.show.references`: Show XML references
-
-## Screenshots
-
-### Schema validation
-
-<img width="738" alt="Screen Shot 2019-07-26 at 23 24 20" src="https://user-images.githubusercontent.com/345274/61962923-3e667700-affd-11e9-8cdb-3103c39987e4.png">
-
-### Snippet & Doc
-
-<img width="594" alt="Screen Shot 2019-07-26 at 23 26 04" src="https://user-images.githubusercontent.com/345274/61962925-3e667700-affd-11e9-8831-ecf78ef2bfbf.png">
 
 ## License
 
