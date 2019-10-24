@@ -1,13 +1,26 @@
 import { commands, ExtensionContext, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, workspace } from 'coc.nvim';
 import fs from 'fs';
-import { DidChangeConfigurationNotification, ReferencesRequest, TextDocumentIdentifier, TextDocumentPositionParams } from 'vscode-languageserver-protocol';
+import {
+  DidChangeConfigurationNotification,
+  DocumentSelector,
+  ReferencesRequest,
+  TextDocumentIdentifier,
+  TextDocumentPositionParams
+} from 'vscode-languageserver-protocol';
 import { Commands } from './commands';
 import { downloadServer } from './downloader';
 import { prepareExecutable } from './javaServerStarter';
 import { RequirementsData, resolveRequirements } from './requirements';
 import { onConfigurationChange, subscribeJDKChangeConfiguration } from './settings';
 
+const documentSelector: DocumentSelector = ['xml', 'xsl'];
+
 export async function activate(context: ExtensionContext): Promise<void> {
+  const doc = await workspace.document;
+  if (!doc || workspace.match(documentSelector, doc.textDocument) < 0) {
+    return;
+  }
+
   const serverRoot = context.storagePath;
   if (!fs.existsSync(serverRoot)) {
     fs.mkdirSync(serverRoot);
@@ -40,12 +53,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const outputChannel = workspace.createOutputChannel('XML Language Server');
   const serverOptions = prepareExecutable(requirements);
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [
-      { scheme: 'file', language: 'xml' },
-      { scheme: 'file', language: 'xsl' },
-      { scheme: 'untitled', language: 'xml' },
-      { scheme: 'untitled', language: 'xsl' }
-    ],
+    documentSelector: documentSelector,
     synchronize: {
       configurationSection: 'xml'
     },
