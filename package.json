@@ -32,8 +32,7 @@
     "semver": "^6.3.0",
     "ts-loader": "^6.0.4",
     "tunnel": "^0.0.6",
-    "typescript": "^3.5.2",
-    "vscode-languageserver-protocol": "3.15.0-next.10"
+    "typescript": "^3.5.2"
   },
   "repository": {
     "type": "git",
