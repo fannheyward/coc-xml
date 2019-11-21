@@ -140,7 +140,7 @@ function openJDKDownload(reject: any, cause: string): void {
     jdkUrl = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html';
   }
   reject({
-    message: cause,
+    message: `[coc-xml] ${cause}`,
     label: 'Get the Java Development Kit',
     openUrl: Uri.parse(jdkUrl),
     replaceClose: false

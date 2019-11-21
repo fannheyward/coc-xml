@@ -17,7 +17,7 @@ const documentSelector: DocumentSelector = ['xml', 'xsl'];
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const doc = await workspace.document;
-  if (!doc || workspace.match(documentSelector, doc.textDocument) < 0) {
+  if (!doc || workspace.match(documentSelector, doc.textDocument) <= 0) {
     return;
   }
 
