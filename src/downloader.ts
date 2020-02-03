@@ -2,8 +2,8 @@
 import parseXml from '@rgrove/parse-xml';
 import { workspace } from 'coc.nvim';
 import { createWriteStream } from 'fs';
-import got from 'got';
 import { Agent } from 'http';
+import fetch from 'node-fetch';
 import path from 'path';
 import tunnel from 'tunnel';
 
@@ -11,8 +11,8 @@ async function getLatestVersion(agent: Agent): Promise<string> {
   let ver = '0.7.0';
   const _url = 'https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/maven-metadata.xml';
   try {
-    const resp = await got(_url, { agent: agent });
-    const doc = parseXml(resp.body);
+    const body = await (await fetch(_url, { agent })).text();
+    const doc = parseXml(body);
     for (const ele of doc.children[0].children) {
       if (ele.type === 'element' && ele.name && ele.name === 'version') {
         ver = ele.children[0].text;
@@ -50,20 +50,26 @@ export async function downloadServer(root: string): Promise<string> {
   const _url = `https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/${_version}/${_file}`;
   const _path = path.join(root, _file);
   return new Promise<string>((resolve, reject) => {
-    try {
-      got
-        .stream(_url, options)
-        .on('downloadProgress', progress => {
-          let p = (progress.percent * 100).toFixed(0);
-          statusItem.text = `${p}% Downloading lsp4xml ${_version}`;
-        })
-        .on('end', () => {
-          statusItem.hide();
-          resolve(_path);
-        })
-        .pipe(createWriteStream(_path));
-    } catch (e) {
-      reject(e);
-    }
+    fetch(_url, options)
+      .then(resp => {
+        let cur = 0;
+        const len = parseInt(resp.headers.get('content-length') || '', 10);
+        resp.body
+          .on('data', chunk => {
+            if (!isNaN(len)) {
+              cur += chunk.length;
+              const p = ((cur / len) * 100).toFixed(2);
+              statusItem.text = `${p}% Downloading lsp4xml ${_version}`;
+            }
+          })
+          .on('end', () => {
+            statusItem.hide();
+            resolve(_path);
+          })
+          .pipe(createWriteStream(_path));
+      })
+      .catch(e => {
+        reject(e);
+      });
   });
 }
