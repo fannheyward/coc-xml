@@ -18,6 +18,10 @@
     "coc.nvim",
     "xml"
   ],
+  "activationEvents": [
+    "onLanguage:xml",
+    "onLanguage:xsl"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@rgrove/parse-xml": "^2.0.1",
