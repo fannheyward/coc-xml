@@ -35,14 +35,16 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   if (requirements.serverPath.length === 0 || !fs.existsSync(requirements.serverPath)) {
-    workspace.showMessage(`lsp4xml.jar not found, downloading...`);
+    workspace.showMessage(`LemMinX.jar not found, downloading...`);
     try {
       requirements.serverPath = await downloadServer(serverRoot);
     } catch (e) {
-      workspace.showMessage('Download lsp4xml.jar failed, you can download it from https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/');
+      workspace.showMessage(
+        'Download LemMinX.jar failed, you can download it from https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/'
+      );
       return;
     }
-    workspace.showMessage(`lsp4xml.jar downloaded`);
+    workspace.showMessage(`LemMinX.jar downloaded`);
   }
 
   const outputChannel = workspace.createOutputChannel('XML Language Server');
@@ -97,10 +99,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(Commands.DOWNLOAD_SERVER, async () => {
       await downloadServer(serverRoot)
         .then(() => {
-          workspace.showMessage(`Update lsp4xml success`);
+          workspace.showMessage(`Update LemMinX success`);
         })
         .catch(() => {
-          workspace.showMessage(`Update lsp4xml failed`);
+          workspace.showMessage(`Update LemMinX failed`);
         });
     })
   );

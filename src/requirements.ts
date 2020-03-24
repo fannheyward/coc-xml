@@ -95,7 +95,7 @@ function checkJavaVersion(java_home: string): Promise<number> {
 function checkServerPath(root: string): Promise<string> {
   return new Promise(resolve => {
     let serverPath = '';
-    const launchersFound: string[] = glob.sync('org.eclipse.lsp4xml-*-uber.jar', { cwd: root });
+    const launchersFound: string[] = glob.sync('org.eclipse.lemminx-*-uber.jar', { cwd: root });
     if (launchersFound.length > 0) {
       try {
         launchersFound.sort((a, b) => {

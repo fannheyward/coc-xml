@@ -200,7 +200,7 @@
         },
         "xml.server.workDir": {
           "type": "string",
-          "default": "~/.lsp4xml",
+          "default": "~/.lemminx",
           "description": "Set a custom folder path for cached XML Schemas. An absolute path is expected, although the ~ prefix (for the user home directory) is supported.",
           "scope": "window"
         },
@@ -266,7 +266,7 @@
       },
       {
         "command": "xml.updateLanguageServer",
-        "title": "Download latest version of lsp4xml from bintray.com",
+        "title": "Download latest version of LemMinX from repo.eclipse.org",
         "category": "XML"
       }
     ]

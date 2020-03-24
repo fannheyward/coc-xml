@@ -1,6 +1,6 @@
 # coc-xml
 
-> fork of [vscode-xml](https://github.com/redhat-developer/vscode-xml), provides support for creating and editing XML documents, based on the [LSP4XML Language Server](https://github.com/angelozerr/lsp4xml), running with Java.
+> fork of [vscode-xml](https://github.com/redhat-developer/vscode-xml), provides support for creating and editing XML documents, based on the [LemMinX XML Language Server](https://github.com/eclipse/lemminx), running with Java.
 
 <img width="594" alt="Screen Shot 2019-07-26 at 23 26 04" src="https://user-images.githubusercontent.com/345274/61962925-3e667700-affd-11e9-8831-ecf78ef2bfbf.png">
 
@@ -8,39 +8,12 @@
 
 `:CocInstall coc-xml`
 
-## Features
-
-- Syntax error reporting
-- General code completion
-- Auto-close tags
-- Automatic node indentation
-- Symbol highlighting
-- Document folding
-- Document links
-- Document symbols and outline
-- Renaming support
-- Document Formatting
-- DTD validation
-- DTD completion
-- DTD formatting
-- XSD validation
-- XSD based hover
-- XSD based code completion
-- XSL support
-- XML catalogs
-- File associations
-- Code actions
-- Schema Caching
-
 ## Requirements
 
 - Java JDK (or JRE) 8 or more recent
 - Ensure Java path is set in either:
   - `xml.java.home` or `java.home` in `coc-settings.json`
   - Environment variable `JAVA_HOME` or `JDK_HOME`
-  - **Note**: The path should end at the parent folder that contains the `bin` folder.
-  - **Example Path**: `/usr/lib/jvm/java-1.8.0` if `bin` exists at `/usr/lib/jvm/java-1.8.0/bin`.
-  - **macOS**: `export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"`
 
 ## Supported settings
 
@@ -68,7 +41,7 @@ The following settings are supported:
 - `xml.validation.noGrammar`: The message severity when a document has no associated grammar. Defaults to `hint`.
 - `xml.validation.disallowDocTypeDecl`: Enable/disable if a fatal error is thrown if the incoming document contains a DOCTYPE declaration. Default is `false`.
 - `xml.validation.resolveExternalEntities`: Enable/disable resolve of external entities. Default is `false`.
-- `xml.server.workDir`: Set an absolute path for all cached schemas to be stored. Defaults to `~/.lsp4xml`.
+- `xml.server.workDir`: Set an absolute path for all cached schemas to be stored. Defaults to `~/.lemminx`.
 - `xml.symbols.enabled`: Enable/disable document symbols (Outline). Default to `true`.
 - `xml.symbols.excluded`: Disable document symbols (Outline) for the given file name patterns. Defaults to `[]`.
 
@@ -76,7 +49,7 @@ More detailed info in the [vscode-xml Wiki](https://github.com/redhat-developer/
 
 ## Available commands
 
-- `xml.updateLanguageServer`: download latest version of lsp4xml from bintray.com
+- `xml.updateLanguageServer`: download latest version of LemMinX from repo.eclipse.org
 - `xml.show.references`: Show XML references
 
 ## License

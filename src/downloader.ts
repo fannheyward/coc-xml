@@ -8,14 +8,18 @@ import path from 'path';
 import tunnel from 'tunnel';
 
 async function getLatestVersion(agent: Agent): Promise<string> {
-  let ver = '0.7.0';
-  const _url = 'https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/maven-metadata.xml';
+  let ver = '0.11.0';
+  const _url = 'https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/maven-metadata.xml';
   try {
     const body = await (await fetch(_url, { agent })).text();
     const doc = parseXml(body);
     for (const ele of doc.children[0].children) {
-      if (ele.type === 'element' && ele.name && ele.name === 'version') {
-        ver = ele.children[0].text;
+      if (ele.type === 'element' && ele.name === 'versioning') {
+        for (const item of ele.children) {
+          if (item.type === 'element' && ele.name === 'release') {
+            ver = ele.children[0].text;
+          }
+        }
       }
     }
   } catch (_e) {}
@@ -25,7 +29,7 @@ async function getLatestVersion(agent: Agent): Promise<string> {
 
 export async function downloadServer(root: string): Promise<string> {
   let statusItem = workspace.createStatusBarItem(0, { progress: true });
-  statusItem.text = 'Downloading lsp4xml from bintray.com';
+  statusItem.text = 'Downloading LemMinX from repo.eclipse.org';
   statusItem.show();
   let config = workspace.getConfiguration('http');
   let proxy = config.get<string>('proxy', '');
@@ -55,8 +59,8 @@ export async function downloadServer(root: string): Promise<string> {
   }
 
   const _version = await getLatestVersion(options.agent);
-  const _file = `org.eclipse.lsp4xml-${_version}-uber.jar`;
-  const _url = `https://dl.bintray.com/lsp4xml/releases/org/lsp4xml/org.eclipse.lsp4xml/${_version}/${_file}`;
+  const _file = `org.eclipse.lemminx-${_version}-uber.jar`;
+  const _url = `https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/${_version}/${_file}`;
   const _path = path.join(root, _file);
   return new Promise<string>((resolve, reject) => {
     fetch(_url, options)
@@ -68,7 +72,7 @@ export async function downloadServer(root: string): Promise<string> {
             if (!isNaN(len)) {
               cur += chunk.length;
               const p = ((cur / len) * 100).toFixed(2);
-              statusItem.text = `${p}% Downloading lsp4xml ${_version}`;
+              statusItem.text = `${p}% Downloading LemMinX ${_version}`;
             }
           })
           .on('end', () => {
