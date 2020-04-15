@@ -3,6 +3,7 @@ import fs from 'fs';
 import {
   DidChangeConfigurationNotification,
   DocumentSelector,
+  FoldingRange,
   ReferencesRequest,
   TextDocumentIdentifier,
   TextDocumentPositionParams
@@ -69,6 +70,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       }
     },
     middleware: {
+      provideFoldingRanges: async (document, context, token, next) => {
+        const ranges = (await next(document, context, token)) as FoldingRange[];
+        return ranges.reverse();
+      },
       workspace: {
         didChangeConfiguration: () => {
           client.sendNotification(DidChangeConfigurationNotification.type.method, { settings: workspace.getConfiguration('xml') });
