@@ -9,15 +9,16 @@ import tunnel from 'tunnel';
 
 async function getLatestVersion(agent: Agent): Promise<string> {
   let ver = '0.11.0';
-  const _url = 'https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/maven-metadata.xml';
+  const _url = 'https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/lemminx/org.eclipse.lemminx/maven-metadata.xml';
   try {
     const body = await (await fetch(_url, { agent })).text();
     const doc = parseXml(body);
     for (const ele of doc.children[0].children) {
       if (ele.type === 'element' && ele.name === 'versioning') {
         for (const item of ele.children) {
-          if (item.type === 'element' && ele.name === 'release') {
-            ver = ele.children[0].text;
+          if (item.type === 'element' && item.name === 'release') {
+            ver = item.children[0].text;
+            break;
           }
         }
       }
@@ -60,7 +61,7 @@ export async function downloadServer(root: string): Promise<string> {
 
   const _version = await getLatestVersion(options.agent);
   const _file = `org.eclipse.lemminx-${_version}-uber.jar`;
-  const _url = `https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/${_version}/${_file}`;
+  const _url = `https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/lemminx/org.eclipse.lemminx/${_version}/${_file}`;
   const _path = path.join(root, _file);
   return new Promise<string>((resolve, reject) => {
     fetch(_url, options)
