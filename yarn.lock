@@ -10,9 +10,9 @@
     msgpack-lite "^0.1.26"
 
 "@rgrove/parse-xml@^2.0.1":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-2.0.2.tgz#163387d0a092f8be41cb0ea9ce992910870cffd9"
-  integrity sha512-lm+PREEkFLWTSO599BrVjhUIXavhPISQGpwssquFviT2qz8eWuIz0+vDDuRqOo5sPdk5NFhqFbG9wURGHm24aQ==
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-2.0.3.tgz#a2a534e52bf7e9675b244222b4979df873ed4295"
+  integrity sha512-TsJ4IumJtkyU9PFMjI7XuoGtBRCiKX8zt4V2QdI3rKFc/a94T8kFRwdhhR5v7Oc8veHlU4IfyQWpE/ClyESEAA==
 
 "@types/events@*":
   version "3.0.0"
