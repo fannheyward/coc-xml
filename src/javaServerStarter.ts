@@ -36,6 +36,9 @@ function prepareParams(requirements: RequirementsData): string[] {
       params.push(watchParentProcess + 'false');
     }
   }
+  if (params.indexOf('-noverify') < 0 && params.indexOf('-Xverify:none') < 0 && requirements.javaVersion < 13) {
+    params.push('-noverify');
+  }
 
   parseVMargs(params, vmargs);
 
