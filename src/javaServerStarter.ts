@@ -1,17 +1,17 @@
+import { Executable } from 'coc.nvim';
 import os from 'os';
 import * as path from 'path';
-import { Executable } from 'coc.nvim';
 import { RequirementsData } from './requirements';
 
-declare var v8debug: string;
+declare let v8debug: string;
 const DEBUG = typeof v8debug === 'object' || startedInDebugMode();
 
 const isWindows = process.platform.indexOf('win') === 0;
 const JAVA_FILENAME = 'java' + (isWindows ? '.exe' : '');
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
-  let executable: Executable = Object.create(null);
-  let options = Object.create(null);
+  const executable: Executable = Object.create(null);
+  const options = Object.create(null);
   options.env = process.env;
   options.stdio = 'pipe';
   executable.options = options;
@@ -21,7 +21,7 @@ export function prepareExecutable(requirements: RequirementsData): Executable {
 }
 
 function prepareParams(requirements: RequirementsData): string[] {
-  let params: string[] = [];
+  const params: string[] = [];
   params.push('-jar');
   params.push(requirements.serverPath);
 
@@ -46,7 +46,7 @@ function prepareParams(requirements: RequirementsData): string[] {
 }
 
 function startedInDebugMode(): boolean {
-  let args = (process as any).execArgv;
+  const args = (process as any).execArgv;
   if (args) {
     return args.some((arg: string) => /^--debug=?/.test(arg) || /^--debug-brk=?/.test(arg) || /^--inspect-brk=?/.test(arg));
   }
@@ -58,14 +58,14 @@ export function parseVMargs(params: any[], vmargsLine: string): void {
   if (!vmargsLine) {
     return;
   }
-  let vmargs = vmargsLine.match(/(?:[^\s"]+|"[^"]*")+/g);
+  const vmargs = vmargsLine.match(/(?:[^\s"]+|"[^"]*")+/g);
   if (vmargs === null) {
     return;
   }
-  vmargs.forEach(arg => {
+  vmargs.forEach((arg) => {
     // remove all standalone double quotes
     // tslint:disable-next-line: only-arrow-functions typedef
-    arg = arg.replace(/(\\)?"/g, function($0, $1) {
+    arg = arg.replace(/(\\)?"/g, function ($0, $1) {
       return $1 ? $0 : '';
     });
     // unescape all escaped double quotes

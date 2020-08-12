@@ -1,7 +1,7 @@
-import { workspace, Uri } from 'coc.nvim';
 import cp from 'child_process';
-import path, { join } from 'path';
+import { Uri, workspace } from 'coc.nvim';
 import glob from 'glob';
+import path, { join } from 'path';
 import pathExists from 'path-exists';
 import semver from 'semver';
 
@@ -32,10 +32,10 @@ export interface ErrorData {
 export async function resolveRequirements(root: string): Promise<RequirementsData> {
   const xmlConfig = workspace.getConfiguration('xml');
 
-  let javaHome = await checkJavaRuntime();
-  let javaVersion = await checkJavaVersion(javaHome);
-  let serverPath = await checkServerPath(root);
-  let vmargs = xmlConfig.get<string>('server.vmargs', '');
+  const javaHome = await checkJavaRuntime();
+  const javaVersion = await checkJavaVersion(javaHome);
+  const serverPath = await checkServerPath(root);
+  const vmargs = xmlConfig.get<string>('server.vmargs', '');
   return Promise.resolve({ javaHome, javaVersion, serverPath, vmargs });
 }
 
@@ -82,7 +82,7 @@ function checkJavaRuntime(): Promise<string> {
 function checkJavaVersion(java_home: string): Promise<number> {
   return new Promise((resolve, reject) => {
     cp.execFile(java_home + '/bin/' + JAVA_FILENAME, ['-version'], {}, (_error, _stdout, stderr) => {
-      let javaVersion = parseMajorVersion(stderr);
+      const javaVersion = parseMajorVersion(stderr);
       if (javaVersion < 8) {
         openJDKDownload(reject, 'Java 8 or more recent is required to run. Please download and install a recent JDK');
       } else {
@@ -93,7 +93,7 @@ function checkJavaVersion(java_home: string): Promise<number> {
 }
 
 function checkServerPath(root: string): Promise<string> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let serverPath = '';
     const launchersFound: string[] = glob.sync('org.eclipse.lemminx-*-uber.jar', { cwd: root });
     if (launchersFound.length > 0) {
@@ -143,6 +143,6 @@ function openJDKDownload(reject: any, cause: string): void {
     message: `[coc-xml] ${cause}`,
     label: 'Get the Java Development Kit',
     openUrl: Uri.parse(jdkUrl),
-    replaceClose: false
+    replaceClose: false,
   } as ErrorData);
 }

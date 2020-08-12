@@ -29,12 +29,12 @@ async function getLatestVersion(agent: Agent): Promise<string> {
 }
 
 export async function downloadServer(root: string): Promise<string> {
-  let statusItem = workspace.createStatusBarItem(0, { progress: true });
+  const statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Downloading LemMinX from repo.eclipse.org';
   statusItem.show();
-  let config = workspace.getConfiguration('http');
+  const config = workspace.getConfiguration('http');
   let proxy = config.get<string>('proxy', '');
-  let options: any = { encoding: null };
+  const options: any = { encoding: null };
   if (proxy) {
     let auth = '';
     let parts = proxy.split('@');
@@ -54,8 +54,8 @@ export async function downloadServer(root: string): Promise<string> {
         headers: {},
         host,
         port,
-        proxyAuth: auth
-      }
+        proxyAuth: auth,
+      },
     });
   }
 
@@ -65,11 +65,11 @@ export async function downloadServer(root: string): Promise<string> {
   const _path = path.join(root, _file);
   return new Promise<string>((resolve, reject) => {
     fetch(_url, options)
-      .then(resp => {
+      .then((resp) => {
         let cur = 0;
         const len = parseInt(resp.headers.get('content-length') || '', 10);
         resp.body
-          .on('data', chunk => {
+          .on('data', (chunk) => {
             if (!isNaN(len)) {
               cur += chunk.length;
               const p = ((cur / len) * 100).toFixed(2);
@@ -82,7 +82,7 @@ export async function downloadServer(root: string): Promise<string> {
           })
           .pipe(createWriteStream(_path));
       })
-      .catch(e => {
+      .catch((e) => {
         reject(e);
       });
   });

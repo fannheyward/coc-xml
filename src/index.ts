@@ -6,7 +6,7 @@ import {
   FoldingRange,
   ReferencesRequest,
   TextDocumentIdentifier,
-  TextDocumentPositionParams
+  TextDocumentPositionParams,
 } from 'vscode-languageserver-protocol';
 import { Commands } from './commands';
 import { downloadServer } from './downloader';
@@ -26,9 +26,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
   try {
     requirements = await resolveRequirements(serverRoot);
   } catch (e) {
-    let res = await workspace.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
+    const res = await workspace.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
     if (res == 0) {
-      commands.executeCommand(Commands.OPEN_BROWSER, e.openUrl).catch(_e => {
+      commands.executeCommand(Commands.OPEN_BROWSER, e.openUrl).catch((_e) => {
         // noop
       });
     }
@@ -53,7 +53,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const clientOptions: LanguageClientOptions = {
     documentSelector: documentSelector,
     synchronize: {
-      configurationSection: 'xml'
+      configurationSection: 'xml',
     },
     outputChannel,
     revealOutputChannelOn: RevealOutputChannelOn.Never,
@@ -63,11 +63,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
         extendedClientCapabilities: {
           codeLens: {
             codeLensKind: {
-              valueSet: ['references']
-            }
-          }
-        }
-      }
+              valueSet: ['references'],
+            },
+          },
+        },
+      },
     },
     middleware: {
       provideFoldingRanges: async (document, context, token, next) => {
@@ -78,12 +78,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
         didChangeConfiguration: () => {
           client.sendNotification(DidChangeConfigurationNotification.type.method, { settings: workspace.getConfiguration('xml') });
           onConfigurationChange();
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
-  let client = new LanguageClient('xml', 'XML LSP', serverOptions, clientOptions);
+  const client = new LanguageClient('xml', 'XML LSP', serverOptions, clientOptions);
   context.subscriptions.push(services.registLanguageClient(client));
 
   context.subscriptions.push(
@@ -94,9 +94,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
       const param: TextDocumentPositionParams = {
         textDocument: <TextDocumentIdentifier>{ uri: document.uri },
-        position
+        position,
       };
-      client.sendRequest(ReferencesRequest.type.method, param).then(locations => {
+      client.sendRequest(ReferencesRequest.type.method, param).then((locations) => {
         commands.executeCommand(Commands.EDITOR_SHOW_REFERENCES, document.uri, position, locations);
       });
     }),
