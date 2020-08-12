@@ -4,6 +4,7 @@ import glob from 'glob';
 import path, { join } from 'path';
 import pathExists from 'path-exists';
 import semver from 'semver';
+import { promisify } from 'util';
 
 const isWindows = process.platform.indexOf('win') === 0;
 const JAVA_FILENAME = 'java' + (isWindows ? '.exe' : '');
@@ -40,24 +41,35 @@ export async function resolveRequirements(root: string): Promise<RequirementsDat
 }
 
 function checkJavaRuntime(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let source: string;
+  return new Promise(async (resolve, reject) => {
     let config = workspace.getConfiguration('xml');
     let javaHome = config.get('java.home', '');
+    let source = '';
     if (javaHome) {
-      source = 'The xml.java.home variable defined in settings';
+      source = 'The xml.java.home variable defined in coc-settings';
     } else {
       config = workspace.getConfiguration('java');
       javaHome = config.get('home', '');
       if (javaHome) {
-        source = 'The java.home variable defined in settings';
+        source = 'The java.home variable defined in coc-settings';
       } else {
         javaHome = process.env['JAVA_HOME'] || '';
         if (javaHome) {
           source = 'The JAVA_HOME environment variable';
         } else {
           javaHome = process.env['JDK_HOME'] || '';
-          source = 'The JDK_HOME environment variable';
+          if (javaHome) {
+            source = 'The JDK_HOME environment variable';
+          } else {
+            try {
+              const res = await promisify(cp.exec)('java -XshowSettings:properties -version 2>&1 | grep java.home');
+              if (res.stdout) {
+                // java.home = /Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre
+                javaHome = res.stdout.replace('java.home =', '').trim();
+                source = 'java.home from "java -XshowSettings:properties -version"';
+              }
+            } catch (error) {}
+          }
         }
       }
     }
