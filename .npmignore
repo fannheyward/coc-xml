@@ -9,3 +9,5 @@ webpack.config.js
 *.map
 .tags
 .DS_Store
+.eslintrc.js
+.github
