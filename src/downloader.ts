@@ -6,6 +6,7 @@ import { Agent } from 'http';
 import fetch from 'node-fetch';
 import path from 'path';
 import tunnel from 'tunnel';
+import { parse } from 'url';
 
 async function getLatestVersion(agent: Agent): Promise<string> {
   let ver = '0.11.0';
@@ -33,30 +34,20 @@ export async function downloadServer(root: string): Promise<string> {
   statusItem.text = 'Downloading LemMinX from repo.eclipse.org';
   statusItem.show();
   const config = workspace.getConfiguration('http');
-  let proxy = config.get<string>('proxy', '');
+  const proxy = config.get<string>('proxy', '');
   const options: any = { encoding: null };
   if (proxy) {
-    let auth = '';
-    let parts = proxy.split('@');
-    if (parts.length > 2) {
-      proxy = parts[parts.length - 1];
-      auth = parts.slice(0, parts.length - 1).join('@');
-    } else if (parts.length === 2) {
-      auth = parts[0];
-      proxy = parts[1];
+    const proxyEndpoint = parse(proxy);
+    if (proxyEndpoint.protocol && /^http/.test(proxyEndpoint.protocol)) {
+      options.agent = tunnel.httpsOverHttp({
+        proxy: {
+          headers: {},
+          host: proxyEndpoint.hostname!,
+          port: Number(proxyEndpoint.port) || 80,
+          proxyAuth: proxyEndpoint.auth || '',
+        },
+      });
     }
-
-    parts = proxy.split(':');
-    const host = parts[0];
-    const port = parseInt(parts[1], 10) || 80;
-    options.agent = tunnel.httpsOverHttp({
-      proxy: {
-        headers: {},
-        host,
-        port,
-        proxyAuth: auth,
-      },
-    });
   }
 
   const _version = await getLatestVersion(options.agent);
