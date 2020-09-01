@@ -22,8 +22,6 @@ export function prepareExecutable(requirements: RequirementsData): Executable {
 
 function prepareParams(requirements: RequirementsData): string[] {
   const params: string[] = [];
-  params.push('-jar');
-  params.push(requirements.serverPath);
 
   if (DEBUG) {
     params.push('-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044,quiet=y');
@@ -41,6 +39,8 @@ function prepareParams(requirements: RequirementsData): string[] {
   }
 
   parseVMargs(params, vmargs);
+
+  params.push('-cp', requirements.serverPath, 'org.eclipse.lemminx.XMLServerLauncher');
 
   return params;
 }
