@@ -14,7 +14,7 @@ import { prepareExecutable } from './javaServerStarter';
 import { RequirementsData, resolveRequirements } from './requirements';
 import { onConfigurationChange, subscribeJDKChangeConfiguration } from './settings';
 
-const documentSelector: DocumentSelector = ['xml', 'xsl'];
+const documentSelector: DocumentSelector = ['xml', 'xslt'];
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverRoot = context.storagePath;
