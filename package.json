@@ -20,7 +20,7 @@
   ],
   "activationEvents": [
     "onLanguage:xml",
-    "onLanguage:xsl"
+    "onLanguage:xslt"
   ],
   "dependencies": {},
   "devDependencies": {
