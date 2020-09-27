@@ -1,6 +1,6 @@
 {
   "name": "coc-xml",
-  "version": "1.12.3",
+  "version": "1.13.0",
   "description": "XML extension for coc.nvim",
   "main": "lib/index.js",
   "author": "Heyward Fann <fannheyward@gmail.com>",
