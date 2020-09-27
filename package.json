@@ -92,6 +92,81 @@
           "description": "Split multiple attributes each onto a new line",
           "scope": "window"
         },
+        "xml.preferences.showSchemaDocumentationType": {
+          "type": "string",
+          "default": "all",
+          "enum": [
+            "documentation",
+            "appinfo",
+            "all",
+            "none"
+          ],
+          "markdownEnumDescriptions": [
+            "Documentation comes from the `xs:documentation` element.",
+            "Documentation comes from the `xs:appinfo` element.",
+            "Documentation comes from the `xs:documentation` and `xs:appinfo` elements.",
+            "Displays no documentation."
+          ],
+          "markdownDescription": "Specifies the source of the XML schema documentation displayed on hover and completion. Default is `all`.",
+          "scope": "window"
+        },
+        "xml.preferences.quoteStyle": {
+          "type": "string",
+          "enum": [
+            "single",
+            "double"
+          ],
+          "default": "double",
+          "markdownDescription": "Preferred quote style to use for completion: `single` quotes, `double` quotes. Default is `double`.",
+          "scope": "window"
+        },
+        "xml.format.emptyElements": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "collapse",
+            "expand"
+          ],
+          "default": "ignore",
+          "markdownDescription": "Expand/collapse empty elements. Default is `ignore`.",
+          "scope": "window"
+        },
+        "xml.format.enforceQuoteStyle": {
+          "type": "string",
+          "enum": [
+            "preferred",
+            "ignore"
+          ],
+          "markdownEnumDescriptions": [
+            "Use preferred quote style set by `xml.preferences.quoteStyle` when formatting.",
+            "Ignore quote style formatting."
+          ],
+          "default": "ignore",
+          "markdownDescription": "Enforce `preferred` quote style (set by `#xml.preferences.quoteStyle#`) or `ignore` quote style when formatting. Default is `ignore`.",
+          "scope": "window"
+        },
+        "xml.format.preserveAttributeLineBreaks": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Preserve line breaks that appear before and after attributes. This setting is overridden if `#xml.format.splitAttributes#` is set to `true`. Default is `false`.",
+          "scope": "window"
+        },
+        "xml.format.xsiSchemaLocationSplit": {
+          "type": "string",
+          "enum": [
+            "onElement",
+            "onPair",
+            "none"
+          ],
+          "markdownEnumDescriptions": [
+            "Put a new line after each namespace and URI, arranging them into one column.",
+            "Put a new line after each URI, arranging the content into pairs of namespace and URI.",
+            "Ignore `xsi:schemaLocation` content formatting."
+          ],
+          "default": "none",
+          "markdownDescription": "Split `xsi:schemaLocation` content. Default is `none`",
+          "scope": "window"
+        },
         "xml.format.joinCDATALines": {
           "type": "boolean",
           "default": false,
@@ -252,6 +327,11 @@
           "default": true,
           "description": "Enable/disable document symbols (Outline). No symbols are given if `\"xml.symbol.enabled\": false`.",
           "scope": "window"
+        },
+        "xml.symbols.maxItemsComputed": {
+          "type": "integer",
+          "default": 5000,
+          "markdownDescription": "The maximum number of outline symbols and folding regions computed (limited for performance reasons). Default is `5000`."
         },
         "xml.symbols.excluded": {
           "type": "array",
