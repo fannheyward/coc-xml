@@ -1,5 +1,6 @@
 import cp from 'child_process';
 import { Uri, workspace } from 'coc.nvim';
+import fs from 'fs';
 import glob from 'glob';
 import path, { join } from 'path';
 import pathExists from 'path-exists';
@@ -77,6 +78,10 @@ function checkJavaRuntime(): Promise<string> {
       if (javaHome.slice(0, 2) === '~/') {
         const homedir = <string>process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
         javaHome = join(homedir, javaHome);
+      }
+      const stat = fs.lstatSync(javaHome);
+      if (stat.isSymbolicLink()) {
+        javaHome = fs.realpathSync(javaHome);
       }
       if (!pathExists.sync(javaHome)) {
         openJDKDownload(reject, source + ' points to a missing folder');
