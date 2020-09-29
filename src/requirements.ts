@@ -77,7 +77,7 @@ function checkJavaRuntime(): Promise<string> {
     if (javaHome) {
       if (javaHome.slice(0, 2) === '~/') {
         const homedir = <string>process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
-        javaHome = join(homedir, javaHome);
+        javaHome = join(homedir, javaHome.slice(2));
       }
       const stat = fs.lstatSync(javaHome);
       if (stat.isSymbolicLink()) {
