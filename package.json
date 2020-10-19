@@ -46,7 +46,7 @@
     "tunnel": "^0.0.6",
     "typescript": "^4.0.2",
     "webpack": "^4.41.4",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^4.1.0"
   },
   "repository": {
     "type": "git",
