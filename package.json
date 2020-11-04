@@ -325,7 +325,7 @@
         "xml.symbols.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable document symbols (Outline). No symbols are given if `\"xml.symbol.enabled\": false`.",
+          "description": "Enable/disable document symbols (Outline).",
           "scope": "window"
         },
         "xml.symbols.maxItemsComputed": {
@@ -337,6 +337,44 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Show referenced grammars in the Outline. Default is `true.",
+          "scope": "window"
+        },
+        "xml.symbols.filters": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "markdownDescription": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              },
+              "expressions": {
+                "type": "array",
+                "default": [],
+                "items": {
+                  "type": "object",
+                  "description": "The XML symbol expression.",
+                  "properties": {
+                    "xpath": {
+                      "type": "string",
+                      "markdownDescription": "The XPath expression of the filter."
+                    },
+                    "excluded": {
+                      "type": "boolean",
+                      "description": "Exclude/Include the node which matches the XPath expression ."
+                    }
+                  }
+                },
+                "markdownDescription": "Array of XML symbol expressions"
+              }
+            },
+            "required": [
+              "pattern",
+              "expressions"
+            ]
+          },
+          "markdownDescription": "Allows XML symbols filter to be associated to file name patterns.",
           "scope": "window"
         },
         "xml.symbols.excluded": {
