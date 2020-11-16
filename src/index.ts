@@ -74,7 +74,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
       },
       workspace: {
         didChangeConfiguration: () => {
-          client.sendNotification(DidChangeConfigurationNotification.type.method, { settings: workspace.getConfiguration('xml') });
+          const settings = {
+            xml: workspace.getConfiguration('xml'),
+            extendedClientCapabilities: {
+              codeLens: {
+                codeLensKind: {
+                  valueSet: ['references'],
+                },
+              },
+            },
+          };
+          client.sendNotification(DidChangeConfigurationNotification.type.method, { settings });
           onConfigurationChange();
         },
       },
