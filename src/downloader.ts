@@ -9,7 +9,7 @@ import tunnel from 'tunnel';
 import { parse } from 'url';
 
 async function getLatestVersion(agent: Agent): Promise<string> {
-  let ver = '0.11.0';
+  let ver = '0.14.1';
   const _url = 'https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/lemminx/org.eclipse.lemminx/maven-metadata.xml';
   try {
     const body = await (await fetch(_url, { agent })).text();
