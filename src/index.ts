@@ -28,9 +28,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   } catch (e) {
     const res = await workspace.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
     if (res == 0) {
-      commands.executeCommand(Commands.OPEN_BROWSER, e.openUrl).catch((_e) => {
-        // noop
-      });
+      commands.executeCommand(Commands.OPEN_BROWSER, e.openUrl).catch(() => {});
     }
     return;
   }
