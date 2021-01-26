@@ -5,6 +5,7 @@ tsconfig.json
 yarn-error.log
 yarn.lock
 webpack.config.js
+esbuild.js
 *.jar
 *.map
 .tags
