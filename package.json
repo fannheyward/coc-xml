@@ -7,9 +7,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf lib",
-    "build": "webpack",
+    "build": "node esbuild.js",
     "lint": "eslint src --ext ts",
-    "watch": "webpack --watch",
     "prepare": "npm-run-all clean build"
   },
   "engines": {
@@ -34,6 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "coc.nvim": "^0.0.79",
+    "esbuild": "^0.8.34",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -43,11 +43,8 @@
     "prettier": "^2.0.5",
     "rimraf": "^3.0.0",
     "semver": "^7.1.1",
-    "ts-loader": "^8.0.1",
     "tunnel": "^0.0.6",
-    "typescript": "^4.0.2",
-    "webpack": "^5.2.0",
-    "webpack-cli": "^4.1.0"
+    "typescript": "^4.0.2"
   },
   "repository": {
     "type": "git",
