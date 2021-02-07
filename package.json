@@ -9,10 +9,10 @@
     "clean": "rimraf lib",
     "build": "node esbuild.js",
     "lint": "eslint src --ext ts",
-    "prepare": "npm-run-all clean build"
+    "prepare": "node esbuild.js"
   },
   "engines": {
-    "coc": "^0.0.70"
+    "coc": "^0.0.80"
   },
   "keywords": [
     "coc.nvim",
@@ -32,19 +32,19 @@
     "@types/tunnel": "^0.0.1",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
-    "coc.nvim": "^0.0.79",
-    "esbuild": "^0.8.34",
+    "coc.nvim": "^0.0.80",
+    "esbuild": "^0.8.42",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.4",
     "node-fetch": "^2.6.0",
-    "npm-run-all": "^4.1.5",
     "path-exists": "^4.0.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.0",
     "semver": "^7.1.1",
     "tunnel": "^0.0.6",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "vscode-languageserver-protocol": "^3.16.0"
   },
   "repository": {
     "type": "git",

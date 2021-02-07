@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, window, workspace } from 'coc.nvim';
 import fs from 'fs';
 import {
   DidChangeConfigurationNotification,
@@ -26,7 +26,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   try {
     requirements = await resolveRequirements(serverRoot);
   } catch (e) {
-    const res = await workspace.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
+    const res = await window.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
     if (res == 0) {
       commands.executeCommand(Commands.OPEN_BROWSER, e.openUrl).catch(() => {});
     }
@@ -34,19 +34,19 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   if (requirements.serverPath.length === 0 || !fs.existsSync(requirements.serverPath)) {
-    workspace.showMessage(`LemMinX.jar not found, downloading...`);
+    window.showMessage(`LemMinX.jar not found, downloading...`);
     try {
       requirements.serverPath = await downloadServer(serverRoot);
     } catch (e) {
-      workspace.showMessage(
+      window.showMessage(
         'Download LemMinX.jar failed, you can download it from https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/'
       );
       return;
     }
-    workspace.showMessage(`LemMinX.jar downloaded`);
+    window.showMessage(`LemMinX.jar downloaded`);
   }
 
-  const outputChannel = workspace.createOutputChannel('XML Language Server');
+  const outputChannel = window.createOutputChannel('XML Language Server');
   const serverOptions = prepareExecutable(requirements);
   const clientOptions: LanguageClientOptions = {
     documentSelector: documentSelector,
@@ -112,15 +112,15 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(Commands.DOWNLOAD_SERVER, async () => {
       await downloadServer(serverRoot)
         .then(() => {
-          workspace.showMessage(`Update LemMinX success`);
+          window.showMessage(`Update LemMinX success`);
         })
         .catch(() => {
-          workspace.showMessage(`Update LemMinX failed`);
+          window.showMessage(`Update LemMinX failed`);
         });
     })
   );
 
   client.onReady().then(() => {
-    workspace.showMessage('XML Language Server Started');
+    window.showMessage('XML Language Server Started');
   });
 }

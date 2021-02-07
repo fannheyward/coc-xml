@@ -1,5 +1,5 @@
 import parseXml from '@rgrove/parse-xml';
-import { workspace } from 'coc.nvim';
+import { window, workspace } from 'coc.nvim';
 import { createWriteStream } from 'fs';
 import { Agent } from 'http';
 import fetch from 'node-fetch';
@@ -29,7 +29,7 @@ async function getLatestVersion(agent: Agent): Promise<string> {
 }
 
 export async function downloadServer(root: string): Promise<string> {
-  const statusItem = workspace.createStatusBarItem(0, { progress: true });
+  const statusItem = window.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Downloading LemMinX from repo.eclipse.org';
   statusItem.show();
   const config = workspace.getConfiguration('http');

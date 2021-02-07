@@ -1,4 +1,4 @@
-import { commands, workspace, WorkspaceConfiguration } from 'coc.nvim';
+import { commands, window, workspace, WorkspaceConfiguration } from 'coc.nvim';
 
 let vmArgsCache: any;
 let ignoreVMArgs = false;
@@ -60,7 +60,7 @@ function hasPreferenceChanged(oldConfig: WorkspaceConfiguration, newConfig: Work
 }
 
 function createReloadWindowMessage(message: string) {
-  workspace.showPrompt(message).then((ok) => {
+  window.showPrompt(message).then((ok) => {
     if (ok) {
       commands.executeCommand(restartId);
     } else {
