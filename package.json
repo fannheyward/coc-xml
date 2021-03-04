@@ -223,6 +223,18 @@
           "description": "Which type of quotes to use for attribute values when formatting.",
           "scope": "window"
         },
+        "xml.format.trimTrailingWhitespace": {
+          "description": "Remove trailing whitespace when formatting",
+          "type": "boolean",
+		  "default": false,
+		  "scope": "window"
+        },
+        "xml.format.trimFinalNewlines": {
+          "description": "Remove newline characters at the end of the file when formatting",
+          "type": "boolean",
+		  "default": false,
+		  "scope": "window"
+        },
         "xml.fileAssociations": {
           "type": "array",
           "default": [],
