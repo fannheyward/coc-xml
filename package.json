@@ -1,6 +1,6 @@
 {
   "name": "coc-xml",
-  "version": "1.14.0",
+  "version": "1.14.1",
   "description": "XML extension for coc.nvim",
   "main": "lib/index.js",
   "author": "Heyward Fann <fannheyward@gmail.com>",
@@ -226,14 +226,14 @@
         "xml.format.trimTrailingWhitespace": {
           "description": "Remove trailing whitespace when formatting",
           "type": "boolean",
-		  "default": false,
-		  "scope": "window"
+          "default": false,
+          "scope": "window"
         },
         "xml.format.trimFinalNewlines": {
           "description": "Remove newline characters at the end of the file when formatting",
           "type": "boolean",
-		  "default": false,
-		  "scope": "window"
+          "default": false,
+          "scope": "window"
         },
         "xml.fileAssociations": {
           "type": "array",
