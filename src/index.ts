@@ -46,14 +46,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
     window.showMessage(`LemMinX.jar downloaded`);
   }
 
-  const outputChannel = window.createOutputChannel('XML Language Server');
   const serverOptions = prepareExecutable(requirements);
   const clientOptions: LanguageClientOptions = {
     documentSelector: documentSelector,
     synchronize: {
       configurationSection: 'xml',
     },
-    outputChannel,
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     initializationOptions: {
       settings: {
