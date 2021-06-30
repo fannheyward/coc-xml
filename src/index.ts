@@ -57,6 +57,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       settings: {
         xml: workspace.getConfiguration('xml'),
         extendedClientCapabilities: {
+          shouldLanguageServerExitOnShutdown: true,
           codeLens: {
             codeLensKind: {
               valueSet: ['references'],
