@@ -1,20 +1,12 @@
-import { commands, ExtensionContext, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, window, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, FoldingRange, LanguageClient, LanguageClientOptions, RevealOutputChannelOn, services, TextDocumentIdentifier, TextDocumentPositionParams, window, workspace } from 'coc.nvim';
 import fs from 'fs';
-import {
-  DidChangeConfigurationNotification,
-  DocumentSelector,
-  FoldingRange,
-  ReferencesRequest,
-  TextDocumentIdentifier,
-  TextDocumentPositionParams,
-} from 'vscode-languageserver-protocol';
 import { Commands } from './commands';
 import { downloadServer } from './downloader';
 import { prepareExecutable } from './javaServerStarter';
-import { RequirementsData, resolveRequirements } from './requirements';
-import { onConfigurationChange, subscribeJDKChangeConfiguration } from './settings';
+import { ErrorData, RequirementsData, resolveRequirements } from './requirements';
+import { subscribeJDKChangeConfiguration } from './settings';
 
-const documentSelector: DocumentSelector = ['xml', 'xslt'];
+const documentSelector = ['xml', 'xslt'];
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverRoot = context.storagePath;
@@ -26,24 +18,22 @@ export async function activate(context: ExtensionContext): Promise<void> {
   try {
     requirements = await resolveRequirements(serverRoot);
   } catch (e) {
-    const res = await window.showQuickpick(['Yes', 'No'], `${e.message}, ${e.label}?`);
+    const res = await window.showQuickpick(['Yes', 'No'], `${(e as ErrorData).message}, ${(e as ErrorData).label}?`);
     if (res == 0) {
-      commands.executeCommand(Commands.OPEN_BROWSER, e.openUrl).catch(() => {});
+      commands.executeCommand(Commands.OPEN_BROWSER, (e as ErrorData).openUrl).catch(() => {});
     }
     return;
   }
 
   if (requirements.serverPath.length === 0 || !fs.existsSync(requirements.serverPath)) {
-    window.showMessage(`LemMinX.jar not found, downloading...`);
+    window.showInformationMessage('LemMinX.jar not found, downloading...')
     try {
       requirements.serverPath = await downloadServer(serverRoot);
     } catch (e) {
-      window.showMessage(
-        'Download LemMinX.jar failed, you can download it from https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/'
-      );
+      window.showErrorMessage('Download LemMinX.jar failed, you can download it from https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/org.eclipse.lemminx/')
       return;
     }
-    window.showMessage(`LemMinX.jar downloaded`);
+    window.showInformationMessage('LemMinX.jar downloaded')
   }
 
   const serverOptions = prepareExecutable(requirements);
@@ -71,22 +61,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const ranges = (await next(document, context, token)) as FoldingRange[];
         return ranges.reverse();
       },
-      workspace: {
-        didChangeConfiguration: () => {
-          const settings = {
-            xml: workspace.getConfiguration('xml'),
-            extendedClientCapabilities: {
-              codeLens: {
-                codeLensKind: {
-                  valueSet: ['references'],
-                },
-              },
-            },
-          };
-          client.sendNotification(DidChangeConfigurationNotification.type.method, { settings });
-          onConfigurationChange();
-        },
-      },
     },
   };
 
@@ -103,7 +77,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         textDocument: <TextDocumentIdentifier>{ uri: document.uri },
         position,
       };
-      client.sendRequest(ReferencesRequest.type.method, param).then((locations) => {
+      client.sendRequest('textDocument/references', param).then((locations) => {
         commands.executeCommand(Commands.EDITOR_SHOW_REFERENCES, document.uri, position, locations);
       });
     }),
@@ -111,15 +85,15 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(Commands.DOWNLOAD_SERVER, async () => {
       await downloadServer(serverRoot)
         .then(() => {
-          window.showMessage(`Update LemMinX success`);
+          window.showInformationMessage('Update LemMinX success')
         })
         .catch(() => {
-          window.showMessage(`Update LemMinX failed`);
+          window.showInformationMessage('Update LemMinX failed')
         });
     })
   );
 
   client.onReady().then(() => {
-    window.showMessage('XML Language Server Started');
+    window.showInformationMessage('XML Language Server Started');
   });
 }

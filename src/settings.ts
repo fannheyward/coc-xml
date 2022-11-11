@@ -1,28 +1,16 @@
 import { commands, window, workspace, WorkspaceConfiguration } from 'coc.nvim';
 
-let vmArgsCache: any;
-let ignoreVMArgs = false;
 let oldXMLConfig: WorkspaceConfiguration = getXMLConfiguration();
 let oldJavaConfig: WorkspaceConfiguration = getJavaConfiguration();
 
 const restartId = 'workbench.action.reloadWindow';
 
 export function getXMLConfiguration(): WorkspaceConfiguration {
-  return getXConfiguration('xml');
+  return workspace.getConfiguration('xml');
 }
 
 export function getJavaConfiguration(): WorkspaceConfiguration {
-  return getXConfiguration('java');
-}
-
-export function getXConfiguration(configName: string) {
-  return workspace.getConfiguration(configName);
-}
-
-export function onConfigurationChange() {
-  if (!ignoreVMArgs) {
-    verifyVMArgs();
-  }
+  return workspace.getConfiguration('java');
 }
 
 export function subscribeJDKChangeConfiguration() {
@@ -63,19 +51,6 @@ function createReloadWindowMessage(message: string) {
   window.showPrompt(message).then((ok) => {
     if (ok) {
       commands.executeCommand(restartId);
-    } else {
-      ignoreVMArgs = true;
     }
   });
-}
-
-function verifyVMArgs() {
-  const currentVMArgs: any = workspace.getConfiguration('xml.server').get('vmargs');
-  if (vmArgsCache != undefined) {
-    if (vmArgsCache != currentVMArgs) {
-      createReloadWindowMessage('XML Language Server configuration changed, please restart coc.nvim');
-    }
-  } else {
-    vmArgsCache = currentVMArgs;
-  }
 }

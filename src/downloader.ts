@@ -1,4 +1,4 @@
-import parseXml from '@rgrove/parse-xml';
+import { parseXml } from '@rgrove/parse-xml';
 import { window, workspace } from 'coc.nvim';
 import { createWriteStream } from 'fs';
 import { Agent } from 'http';
@@ -13,6 +13,7 @@ async function getLatestVersion(agent: Agent): Promise<string> {
   try {
     const body = await (await fetch(_url, { agent })).text();
     const doc = parseXml(body);
+    // @ts-ignore
     for (const ele of doc.children[0].toJSON()['children']) {
       if (ele.type === 'element' && ele.name === 'versioning') {
         for (const item of ele.children) {
