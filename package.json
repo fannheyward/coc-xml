@@ -32,7 +32,7 @@
     "@types/tunnel": "^0.0.3",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
-    "coc.nvim": "^0.0.80",
+    "coc.nvim": "^0.0.82",
     "esbuild": "^0.12.1",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^8.1.0",
