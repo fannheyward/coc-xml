@@ -33,7 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "coc.nvim": "^0.0.83-next.9",
-    "esbuild": "^0.16.12",
+    "esbuild": "^0.17.5",
     "eslint": "^8.27.0",
     "node-fetch": "^2.6.0",
     "path-exists": "^4.0.0",
