@@ -168,9 +168,9 @@
     fastq "^1.6.0"
 
 "@rgrove/parse-xml@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-4.0.1.tgz#4f52bd9b0354653acac36cfe5460bd05b17bc00e"
-  integrity sha512-ZjEohvhVVzr7cvwc7UqdqWShDlh2y79N1o6wlEIDLX7cpKVrLI9zTqT8etArqumnaGrxgyAE2/11KF8cozHsrA==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-4.1.0.tgz#ff489b59c4794569fa1b798515eef6826daeeb5e"
+  integrity sha512-pBiltENdy8SfI0AeR1e5TRpS9/9Gl0eiOEt6ful2jQfzsgvZYWqsKiBWaOCLdocQuk0wS7KOHI37n0C1pnKqTw==
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
