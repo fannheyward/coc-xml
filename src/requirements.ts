@@ -1,7 +1,7 @@
 import cp from 'child_process';
 import { Uri, workspace } from 'coc.nvim';
 import fs from 'fs';
-import glob from 'glob';
+import { glob } from 'glob';
 import path, { join } from 'path';
 import pathExists from 'path-exists';
 import semver from 'semver';
