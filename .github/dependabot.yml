@@ -6,6 +6,25 @@ updates:
   schedule:
     interval: monthly
     time: "21:00"
-  open-pull-requests-limit: 10
+  groups:
+    dev-dependencies-tunnel:
+      patterns:
+      - "@types/tunnel"
+      - "tunnel"
+    dev-dependencies-semver:
+      patterns:
+      - "@types/semver"
+      - "semver"
+    dev-dependencies-node-fetch:
+      patterns:
+      - "@types/node-fetch"
+      - "node-fetch"
+    dev-dependencies-glob:
+      patterns:
+      - "@types/glob"
+      - "glob"
+    dev-dependencies-ts-eslint:
+      patterns:
+      - "@typescript-eslint/*"
   reviewers:
   - fannheyward
