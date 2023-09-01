@@ -36,7 +36,7 @@
     "esbuild": "^0.19.2",
     "eslint": "^8.27.0",
     "glob": "^10.3.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.3.2",
     "path-exists": "^4.0.0",
     "rimraf": "^5.0.0",
     "semver": "^7.3.8",
