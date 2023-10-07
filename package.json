@@ -6,7 +6,6 @@
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf lib",
     "build": "node esbuild.mjs",
     "lint": "eslint src --ext ts",
     "prepare": "node esbuild.mjs"
@@ -38,7 +37,6 @@
     "glob": "^10.3.3",
     "node-fetch": "^2.6.0",
     "path-exists": "^4.0.0",
-    "rimraf": "^5.0.0",
     "semver": "^7.3.8",
     "tunnel": "^0.0.6",
     "typescript": "^5.0.3"
