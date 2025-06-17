@@ -23,8 +23,5 @@ updates:
       patterns:
       - "@types/glob"
       - "glob"
-    dev-dependencies-ts-eslint:
-      patterns:
-      - "@typescript-eslint/*"
   reviewers:
   - fannheyward

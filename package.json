@@ -7,7 +7,6 @@
   "license": "MIT",
   "scripts": {
     "build": "node esbuild.mjs",
-    "lint": "eslint src --ext ts",
     "prepare": "node esbuild.mjs"
   },
   "engines": {
@@ -21,7 +20,6 @@
     "onLanguage:xml",
     "onLanguage:xslt"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@rgrove/parse-xml": "^4.0.1",
     "@types/glob": "^8.0.0",
@@ -29,11 +27,8 @@
     "@types/node-fetch": "^2.6.2",
     "@types/semver": "^7.3.13",
     "@types/tunnel": "^0.0.7",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
     "coc.nvim": "^0.0.83-next.18",
     "esbuild": "^0.25.0",
-    "eslint": "^8.27.0",
     "glob": "^10.3.3",
     "node-fetch": "^2.6.0",
     "path-exists": "^4.0.0",
