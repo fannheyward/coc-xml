@@ -29,7 +29,7 @@
     "@types/tunnel": "^0.0.7",
     "coc.nvim": "^0.0.83-next.18",
     "esbuild": "^0.25.0",
-    "glob": "^10.3.3",
+    "glob": "^11.0.3",
     "node-fetch": "^2.6.0",
     "path-exists": "^4.0.0",
     "semver": "^7.3.8",
