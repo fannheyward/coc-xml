@@ -23,7 +23,7 @@
   "devDependencies": {
     "@rgrove/parse-xml": "^4.0.1",
     "@types/glob": "^8.0.0",
-    "@types/node": "16",
+    "@types/node": "24",
     "@types/node-fetch": "^2.6.2",
     "@types/semver": "^7.3.13",
     "@types/tunnel": "^0.0.7",
