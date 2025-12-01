@@ -30,7 +30,7 @@
     "coc.nvim": "^0.0.83-next.18",
     "esbuild": "^0.25.0",
     "glob": "10.5",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.3.2",
     "path-exists": "^4.0.0",
     "semver": "^7.3.8",
     "tunnel": "^0.0.6",
