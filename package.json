@@ -28,7 +28,7 @@
     "@types/semver": "^7.3.13",
     "@types/tunnel": "^0.0.7",
     "coc.nvim": "^0.0.83-next.18",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.27.0",
     "glob": "10.5",
     "node-fetch": "^2.6.0",
     "path-exists": "^4.0.0",
