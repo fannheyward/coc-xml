@@ -34,7 +34,7 @@
     "path-exists": "^4.0.0",
     "semver": "^7.3.8",
     "tunnel": "^0.0.6",
-    "typescript": "^5.0.3"
+    "typescript": "^6.0.2"
   },
   "repository": {
     "type": "git",
