@@ -49,6 +49,30 @@
       "type": "object",
       "title": "XML configuration",
       "properties": {
+        "xml.java.home": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Specifies the folder path to the JDK (11 or more recent) used to launch the XML Language Server if the Java server is being run.\nOn Windows, backslashes must be escaped, i.e.\n`\"xml.java.home\": \"C:\\\\Program Files\\\\Java\\\\jdk11\"`.",
+          "scope": "window"
+        },
+        "xml.server.vmargs": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "-Xmx64M",
+          "description": "Specifies extra VM arguments used to launch the XML Language Server. Eg. use `-Xmx1G  -XX:+UseG1GC -XX:+UseStringDeduplication` to increase the heap size to 1GB and enable String deduplication with the G1 Garbage collector.",
+          "scope": "window"
+        },
+        "xml.server.workDir": {
+          "type": "string",
+          "default": "~/.lemminx",
+          "description": "Set a custom folder path for cached XML Schemas. An absolute path is expected, although the `~` prefix (for the user home directory) is supported. Default is `~/.lemminx`.",
+          "scope": "window"
+        },
         "xml.trace.server": {
           "type": "string",
           "enum": [
@@ -57,7 +81,18 @@
             "verbose"
           ],
           "default": "off",
-          "description": "Traces the communication between VS Code and the XML language server.",
+          "description": "Traces the communication between VS Code and the XML language server in the Output view. Default is `off`.",
+          "scope": "window"
+        },
+        "xml.logs.client": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable logging to the Output view. Default is `true`."
+        },
+        "xml.downloadExternalResources.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Download external resources like referenced DTD, XSD. Default is `true`.",
           "scope": "window"
         },
         "xml.catalogs": {
@@ -66,18 +101,218 @@
           "items": {
             "type": "string"
           },
-          "description": "Array of XML Catalogs",
+          "description": "Register XML catalog files.",
           "scope": "window"
         },
-        "xml.logs.client": {
+        "xml.fileAssociations": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              },
+              "systemId": {
+                "type": "string",
+                "description": "The path or URL to the XML schema (XSD or DTD)."
+              }
+            },
+            "required": [
+              "pattern",
+              "systemId"
+            ]
+          },
+          "description": "Allows XML schemas/ DTD to be associated to file name patterns.\n\nExample:\n```json\n[{\n  \"pattern\": \"file1.xml\",\n  \"systemId\": \"path/to/file.xsd\"\n},\n{\n  \"pattern\": \"**/*.xsd\",\n  \"systemId\": \"http://www.w3.org/2001/XMLSchema.xsd\"\n}]\n```",
+          "scope": "window"
+        },
+        "xml.foldings.includeClosingTagInFold": {
           "type": "boolean",
           "default": false,
-          "description": "Should the server log to client output"
+          "description": "Minimize the closing tag after folding. Default is `false`.",
+          "scope": "window"
+        },
+        "xml.format.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable ability to format document. Default is `true`.",
+          "scope": "window"
+        },
+        "xml.format.emptyElements": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "collapse",
+            "expand"
+          ],
+          "default": "ignore",
+          "description": "Expand/collapse empty elements. Default is `ignore`.",
+          "scope": "window"
+        },
+        "xml.format.enforceQuoteStyle": {
+          "type": "string",
+          "enum": [
+            "preferred",
+            "ignore"
+          ],
+          "markdownEnumDescriptions": [
+            "Use preferred quote style set by `xml.preferences.quoteStyle` when formatting.",
+            "Ignore quote style formatting."
+          ],
+          "default": "ignore",
+          "description": "Enforce `preferred` quote style (set by `#xml.preferences.quoteStyle#`) or `ignore` quote style when formatting. Default is `ignore`.",
+          "scope": "window"
+        },
+        "xml.format.legacy": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable/disable legacy formatter. Default is `false`.",
+          "scope": "window"
+        },
+        "xml.format.grammarAwareFormatting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use Schema/DTD grammar information while formatting. Default is `true`. Not supported by legacy formatter.",
+          "scope": "window"
+        },
+        "xml.format.joinCDATALines": {
+          "type": "boolean",
+          "default": false,
+          "description": "Set to `true` to join lines in CDATA content during formatting. Default is `false`.",
+          "scope": "window"
+        },
+        "xml.format.joinCommentLines": {
+          "type": "boolean",
+          "default": false,
+          "description": "Join comment content on format. Default is `false`.",
+          "scope": "window"
+        },
+        "xml.format.joinContentLines": {
+          "type": "boolean",
+          "default": false,
+          "description": "Normalize the whitespace of content inside an element. Newlines and excess whitespace are removed. Default is `false`.",
+          "scope": "window"
+        },
+        "xml.format.maxLineWidth": {
+          "type": "integer",
+          "default": 100,
+          "description": "Max line width. Set to `0` to disable this setting. Default is `100`. Not supported by legacy formatter.",
+          "scope": "window"
+        },
+        "xml.format.preserveAttributeLineBreaks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Preserve line breaks that appear before and after attributes. This setting is overridden if `#xml.format.splitAttributes#` is set to `splitNewLine` or `alignWithFirstAttr`. Default is `true`.",
+          "scope": "window"
+        },
+        "xml.format.preserveEmptyContent": {
+          "type": "boolean",
+          "default": false,
+          "description": "Preserve empty content/whitespace in a tag. Default is `false`. Supported only with legacy formatter.",
+          "scope": "window"
+        },
+        "xml.format.preservedNewlines": {
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "default": 2,
+          "description": "Preserve new lines that separate tags. The value represents the maximum number of new lines per section. A value of 0 removes all new lines. Default is `2`.",
+          "scope": "window"
+        },
+        "xml.format.preserveSpace": {
+          "type": "array",
+          "default": [
+            "xsl:text",
+            "xsl:comment",
+            "xsl:processing-instruction",
+            "literallayout",
+            "programlisting",
+            "screen",
+            "synopsis",
+            "pre",
+            "xd:pre",
+            "style",
+            "script"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Element names for which spaces will be preserved. Not supported by legacy formatter.",
+          "scope": "window"
+        },
+        "xml.format.spaceBeforeEmptyCloseTag": {
+          "type": "boolean",
+          "default": true,
+          "description": "Insert space before end of self closing tag. \nExample:\n  ```<tag/> -> <tag />```. Default is `true`.",
+          "scope": "window"
+        },
+        "xml.format.xsiSchemaLocationSplit": {
+          "type": "string",
+          "enum": [
+            "onElement",
+            "onPair",
+            "none"
+          ],
+          "markdownEnumDescriptions": [
+            "Put a new line after each namespace and URI, arranging them into one column.",
+            "Put a new line after each URI, arranging the content into pairs of namespace and URI.",
+            "Ignore `xsi:schemaLocation` content formatting."
+          ],
+          "default": "onPair",
+          "description": "Split `xsi:schemaLocation` content. Default is `onPair`.",
+          "scope": "window"
         },
         "xml.format.splitAttributes": {
+          "type": "string",
+          "enum": [
+            "preserve",
+            "splitNewLine",
+            "alignWithFirstAttr"
+          ],
+          "default": "preserve",
+          "description": "Split multiple attributes each onto a new line or align attributes to the first. Default is `preserve`. Indicate level of indentation with `#xml.format.splitAttributesIndentSize#`.",
+          "scope": "window"
+        },
+        "xml.format.splitAttributesIndentSize": {
+          "type": "number",
+          "default": 2,
+          "description": "How many levels to indent the attributes by when `#xml.format.splitAttributes#` is `true`. Default value is `2`. "
+        },
+        "xml.format.closingBracketNewLine": {
           "type": "boolean",
           "default": false,
-          "description": "Split multiple attributes each onto a new line",
+          "description": "The option to put a closing bracket on a newline when `#xml.format.splitAttributes#` is `true`. Default value is `false`. "
+        },
+        "xml.completion.autoCloseTags": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable autoclosing of XML tags. Default is `true`. \n\nIMPORTANT: Turn off `#editor.autoClosingTags#` for this to work.",
+          "scope": "window"
+        },
+        "xml.completion.autoCloseRemovesContent": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the content of an element being removed when the element start tag is turned into a self-closing tag. The default setting is to remove the content.",
+          "scope": "window"
+        },
+        "xml.codeLens.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable/disable XML CodeLens. Default is `false`. "
+        },
+        "xml.preferences.quoteStyle": {
+          "type": "string",
+          "enum": [
+            "single",
+            "double"
+          ],
+          "default": "double",
+          "description": "Preferred quote style to use for completion: `single` quotes, `double` quotes. Default is `double`.",
           "scope": "window"
         },
         "xml.preferences.showSchemaDocumentationType": {
@@ -95,194 +330,63 @@
             "Documentation comes from the `xs:documentation` and `xs:appinfo` elements.",
             "Displays no documentation."
           ],
-          "markdownDescription": "Specifies the source of the XML schema documentation displayed on hover and completion. Default is `all`.",
+          "description": "Specifies the source of the XML schema documentation displayed on hover and completion. Default is `all`.",
           "scope": "window"
         },
-        "xml.preferences.quoteStyle": {
-          "type": "string",
-          "enum": [
-            "single",
-            "double"
-          ],
-          "default": "double",
-          "markdownDescription": "Preferred quote style to use for completion: `single` quotes, `double` quotes. Default is `double`.",
+        "xml.validation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable all validation. Default is `true`.",
           "scope": "window"
         },
-        "xml.format.emptyElements": {
+        "xml.validation.namespaces.enabled": {
           "type": "string",
+          "default": "always",
           "enum": [
-            "ignore",
-            "collapse",
-            "expand"
-          ],
-          "default": "ignore",
-          "markdownDescription": "Expand/collapse empty elements. Default is `ignore`.",
-          "scope": "window"
-        },
-        "xml.format.enforceQuoteStyle": {
-          "type": "string",
-          "enum": [
-            "preferred",
-            "ignore"
+            "always",
+            "never",
+            "onNamespaceEncountered"
           ],
           "markdownEnumDescriptions": [
-            "Use preferred quote style set by `xml.preferences.quoteStyle` when formatting.",
-            "Ignore quote style formatting."
+            "Enable namespaces validation.",
+            "Disable namespaces validation.",
+            "Enable namespaces validation only when the root element declares an xmlns namespace."
           ],
-          "default": "ignore",
-          "markdownDescription": "Enforce `preferred` quote style (set by `#xml.preferences.quoteStyle#`) or `ignore` quote style when formatting. Default is `ignore`.",
+          "description": "Enable/disable namespaces validation. Default is `always`. Ignored if `#xml.validation.enabled#` is set to `false`.",
           "scope": "window"
         },
-        "xml.format.preserveAttributeLineBreaks": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "Preserve line breaks that appear before and after attributes. This setting is overridden if `#xml.format.splitAttributes#` is set to `true`. Default is `false`.",
-          "scope": "window"
-        },
-        "xml.format.xsiSchemaLocationSplit": {
+        "xml.validation.schema.enabled": {
           "type": "string",
+          "default": "always",
           "enum": [
-            "onElement",
-            "onPair",
-            "none"
+            "always",
+            "never",
+            "onValidSchema"
           ],
           "markdownEnumDescriptions": [
-            "Put a new line after each namespace and URI, arranging them into one column.",
-            "Put a new line after each URI, arranging the content into pairs of namespace and URI.",
-            "Ignore `xsi:schemaLocation` content formatting."
+            "Enable schema based validation.",
+            "Disable schema based validation.",
+            "Enable schema based validation only when the declared xsi:schemaLocation hint or xsi:noNamespaceSchemaLocation is valid for the root element."
           ],
-          "default": "none",
-          "markdownDescription": "Split `xsi:schemaLocation` content. Default is `none`",
+          "description": "Enable/disable schema based validation. Default is `always`. Ignored if `#xml.validation.enabled#` is set to `false`.",
           "scope": "window"
         },
-        "xml.format.joinCDATALines": {
+        "xml.validation.disallowDocTypeDecl": {
           "type": "boolean",
           "default": false,
-          "description": "Join lines in a CDATA tag's content",
+          "description": "Enable/disable if a fatal error is thrown if the incoming document contains a DOCTYPE declaration. Default is `false`.",
           "scope": "window"
         },
-        "xml.format.joinCommentLines": {
+        "xml.validation.resolveExternalEntities": {
           "type": "boolean",
           "default": false,
-          "description": "Join comment content on format",
+          "description": "Enable/disable resolve of external entities. Default is `false`.",
           "scope": "window"
         },
-        "xml.format.spaceBeforeEmptyCloseTag": {
-          "type": "boolean",
-          "default": true,
-          "description": "Insert space before end of self closing tag. \nExample:\n  <tag/> -> <tag />",
-          "scope": "window"
-        },
-        "xml.format.joinContentLines": {
+        "xml.validation.xInclude.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Normalize the whitespace of content inside an element. Newlines and excess whitespace are removed.",
-          "scope": "window"
-        },
-        "xml.format.preserveEmptyContent": {
-          "type": "boolean",
-          "default": false,
-          "description": "Preserve empty content/whitespace in a tag.",
-          "scope": "window"
-        },
-        "xml.format.preservedNewlines": {
-          "type": "integer",
-          "enum": [
-            0,
-            1,
-            2,
-            3
-          ],
-          "default": 2,
-          "description": "Preserve new lines that separate tags. The value represents the maximum number of new lines per section. A value of 0 removes all new lines.",
-          "scope": "window"
-        },
-        "xml.format.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable ability to format document",
-          "scope": "window"
-        },
-        "xml.format.quotations": {
-          "type": "string",
-          "enum": [
-            "doubleQuotes",
-            "singleQuotes"
-          ],
-          "default": "doubleQuotes",
-          "description": "Which type of quotes to use for attribute values when formatting.",
-          "scope": "window"
-        },
-        "xml.format.trimTrailingWhitespace": {
-          "description": "Remove trailing whitespace when formatting",
-          "type": "boolean",
-          "default": false,
-          "scope": "window"
-        },
-        "xml.format.trimFinalNewlines": {
-          "description": "Remove newline characters at the end of the file when formatting",
-          "type": "boolean",
-          "default": false,
-          "scope": "window"
-        },
-        "xml.fileAssociations": {
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "object",
-            "properties": {
-              "systemId": {
-                "type": "string",
-                "description": "The path or URL to the XML schema (XSD or DTD)"
-              },
-              "pattern": {
-                "type": "string",
-                "description": "File glob pattern. Example: **/*.Format.ps1xml\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob",
-                "markdownDescription": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
-              }
-            },
-            "required": [
-              "systemId",
-              "pattern"
-            ]
-          },
-          "description": "Allows XML schemas to be associated to file name patterns.\n\nExample:\n[{\n  \"systemId\": \"path/to/file.xsd\",\n  \"pattern\": \"file1.xml\"\n},\n{\n  \"systemId\": \"http://www.w3.org/2001/XMLSchema.xsd\",\n  \"pattern\": \"**/*.xsd\"\n}]",
-          "markdownDescription": "Allows XML schemas to be associated to file name patterns.\n\nExample:\n```json\n[{\n  \"systemId\": \"path/to/file.xsd\",\n  \"pattern\": \"file1.xml\"\n},\n{\n  \"systemId\": \"http://www.w3.org/2001/XMLSchema.xsd\",\n  \"pattern\": \"**/*.xsd\"\n}]\n```",
-          "scope": "window"
-        },
-        "xml.completion.autoCloseTags": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable autoclosing of XML tags. \n\nIMPORTANT: Turn off editor.autoClosingTags for this to work",
-          "scope": "window"
-        },
-        "xml.codeLens.enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable/disable XML CodeLens"
-        },
-        "xml.java.home": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
-          "description": "Specifies the folder path to the JDK (8 or more recent) used to launch the XML Language Server.\nOn Windows, backslashes must be escaped, i.e.\n\"xml.java.home\": \"C:\\\\Program Files\\\\Java\\\\jdk1.8.0_161\"",
-          "scope": "window"
-        },
-        "xml.server.vmargs": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": "-Xmx64M -XX:+UseG1GC -XX:+UseStringDeduplication",
-          "description": "Specifies extra VM arguments used to launch the XML Language Server. Eg. use `-Xmx1G  -XX:+UseG1GC -XX:+UseStringDeduplication` to bypass class verification, increase the heap size to 1GB and enable String deduplication with the G1 Garbage collector",
-          "scope": "window"
-        },
-        "xml.server.workDir": {
-          "type": "string",
-          "default": "~/.lemminx",
-          "description": "Set a custom folder path for cached XML Schemas. An absolute path is expected, although the ~ prefix (for the user home directory) is supported.",
+          "description": "Enable/disable validation for `xi:include`. Default is `false`.",
           "scope": "window"
         },
         "xml.validation.noGrammar": {
@@ -295,48 +399,61 @@
             "error"
           ],
           "default": "hint",
-          "description": "The message severity when a document has no associated grammar.",
-          "scope": "window"
-        },
-        "xml.validation.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable all validation.",
-          "scope": "window"
-        },
-        "xml.validation.schema": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable schema based validation. Ignored if \"xml.validation.enabled\": false.",
-          "scope": "window"
-        },
-        "xml.validation.disallowDocTypeDecl": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable/disable if a fatal error is thrown if the incoming document contains a DOCTYPE declaration.",
-          "scope": "window"
-        },
-        "xml.validation.resolveExternalEntities": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable resolve of external entities.",
+          "description": "The message severity when a document has no associated grammar. Default is `hint`.",
           "scope": "window"
         },
         "xml.symbols.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable document symbols (Outline).",
+          "description": "Enable/disable document symbols (Outline). Default is `true`. No symbols are given if `\"xml.symbols.enabled\": false`.",
+          "scope": "window"
+        },
+        "xml.validation.filters": {
+          "type": "array",
+          "default": [
+            {
+              "pattern": "**.exsd",
+              "noGrammar": "ignore",
+              "schema": {
+                "enabled": "never"
+              }
+            },
+            {
+              "pattern": "**{.project,.classpath,plugin.xml,feature.xml,category.xml,.target,.product}",
+              "noGrammar": "ignore"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              }
+            },
+            "required": [
+              "pattern"
+            ]
+          }
+        },
+        "xml.symbols.excluded": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Disable document symbols (Outline) for the given file name patterns. Updating file name patterns does not automatically reload the Outline view for the relevant file(s). Each file must either be reopened or changed, in order to trigger an Outline view reload.\n\nExample:\n```\n[\n \"**/*LargeFile.xml\"\n]```.",
           "scope": "window"
         },
         "xml.symbols.maxItemsComputed": {
           "type": "integer",
           "default": 5000,
-          "markdownDescription": "The maximum number of outline symbols and folding regions computed (limited for performance reasons). Default is `5000`."
+          "description": "The maximum number of outline symbols and folding regions computed (limited for performance reasons). Default is `5000`. "
         },
         "xml.symbols.showReferencedGrammars": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Show referenced grammars in the Outline. Default is `true.",
+          "description": "Show referenced grammars in the Outline. Default is `true`.",
           "scope": "window"
         },
         "xml.symbols.filters": {
@@ -347,7 +464,7 @@
             "properties": {
               "pattern": {
                 "type": "string",
-                "markdownDescription": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+                "description": "File glob pattern. Example: `**/*.Format.ps1xml`\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
               },
               "expressions": {
                 "type": "array",
@@ -358,15 +475,23 @@
                   "properties": {
                     "xpath": {
                       "type": "string",
-                      "markdownDescription": "The XPath expression of the filter."
+                      "description": "The XPath expression of the filter."
                     },
                     "excluded": {
                       "type": "boolean",
-                      "description": "Exclude/Include the node which matches the XPath expression ."
+                      "description": "Exclude/Include the node which matches the XPath expression."
+                    },
+                    "inlineAttribute": {
+                      "type": "boolean",
+                      "description": "Whether or not to show an attribute expression inline with the owning element instead of nested."
+                    },
+                    "showAttributeName": {
+                      "type": "boolean",
+                      "description": "Whether or not the attribute expression name should be shown along with its value (for inline attributes only)."
                     }
                   }
                 },
-                "markdownDescription": "Array of XML symbol expressions"
+                "description": "Array of XML symbol expressions"
               }
             },
             "required": [
@@ -374,16 +499,144 @@
               "expressions"
             ]
           },
-          "markdownDescription": "Allows XML symbols filter to be associated to file name patterns.",
+          "description": "Allows XML symbols filter to be associated to file name patterns.",
           "scope": "window"
         },
-        "xml.symbols.excluded": {
+        "xml.references": {
           "type": "array",
           "default": [],
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "matches the files that reference declared with `expressions` applies to.\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              },
+              "prefix": {
+                "type": "string",
+                "description": "The prefix to use (ex : '#')  for from for all the declared reference expressions."
+              },
+              "multiple": {
+                "type": "boolean",
+                "description": "true if the from attribute, text can declare several from references and false otherwise for all the declared reference expressions."
+              },
+              "expressions": {
+                "type": "array",
+                "default": [],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "prefix": {
+                      "type": "string",
+                      "description": "The prefix to use (ex : '#')  for from."
+                    },
+                    "multiple": {
+                      "type": "boolean",
+                      "description": "true if the from attribute, text can declare several from references and false otherwise."
+                    },
+                    "from": {
+                      "type": "string",
+                      "description": "The from reference DOM node (attribute, text) declared with XPath (ex: foo/@attr, foo/text())."
+                    },
+                    "to": {
+                      "type": "string",
+                      "description": "The to reference DOM node (attribute, text) declared with XPath (ex: foo/@attr, foo/text())."
+                    }
+                  }
+                },
+                "required": [
+                  "from",
+                  "to"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "expressions"
+            ]
           },
-          "description": "Disable document symbols (Outline) for the given file name patterns. Updating file name patterns does not automatically reload the Outline view for the relevant file(s). Each file must either be reopened or changed, in order to trigger an Outline view reload.\n\nExample:\n[\n \"**/*LargeFile.xml\"\n]",
+          "description": "Allows references for the given file name patterns.",
+          "scope": "window"
+        },
+        "xml.colors": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "matches the files that colors declared with `expressions` applies to.\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              },
+              "expressions": {
+                "type": "array",
+                "default": [],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "xpath": {
+                      "type": "string",
+                      "description": "The color DOM node (attribute, text) declared with XPath (ex: foo/@color, foo/text())"
+                    }
+                  }
+                },
+                "required": [
+                  "xpath"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "expressions"
+            ]
+          },
+          "description": "Allows colors for the given file name patterns.",
+          "scope": "window"
+        },
+        "xml.filePathSupport.mappings": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "matches the files that file path declared with `expressions` applies to.\n\nMore information on the glob syntax: https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"
+              },
+              "expressions": {
+                "type": "array",
+                "default": [],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "xpath": {
+                      "type": "string",
+                      "description": "The file path DOM node (attribute, text) declared with XPath (ex: foo/@path, foo/text())"
+                    },
+                    "filter": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "String array which contains allowed file extensions (ex: [\".png\", \".gif\", \".jpg\"])"
+                    },
+                    "separator": {
+                      "type": "string",
+                      "description": "Separator character to use if multiple file paths are allowed (ex: \";\")"
+                    }
+                  }
+                },
+                "required": [
+                  "xpath"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "expressions"
+            ]
+          },
+          "description": "Allows file path for the given file name patterns.",
           "scope": "window"
         }
       }
