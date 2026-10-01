@@ -21,7 +21,7 @@
     "onLanguage:xslt"
   ],
   "devDependencies": {
-    "@rgrove/parse-xml": "^4.2.0",
+    "@rgrove/parse-xml": "^5.0.0",
     "@types/glob": "^9.0.0",
     "@types/node": "26",
     "@types/node-fetch": "^2.6.13",
